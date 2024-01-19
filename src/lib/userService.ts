@@ -1,0 +1,45 @@
+import crypto from "node:crypto";
+import { User, UserBase } from "../types/user";
+
+export class UserService {
+  private users: User[];
+
+  constructor() {
+    this.users = [];
+  }
+
+  async getList(): Promise<User[]> {
+    return this.users;
+  }
+
+  async create(userBase: UserBase): Promise<User["id"]> {
+    const user = {
+      id: crypto.randomUUID(),
+      ...userBase,
+    };
+    this.users.push(user);
+    return user.id;
+  }
+
+  async get(id: User["id"]): Promise<User> {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) {
+      throw new Error(`User not found with id: ${id}`);
+    }
+    return user;
+  }
+
+  async update(id: User["id"], delta: Partial<UserBase>): Promise<User["id"]> {
+    const userIndex = this.users.findIndex((user) => user.id === id);
+    if (userIndex === -1) {
+      throw new Error(`User not found with id: ${id}`);
+    }
+    this.users[userIndex] = { ...this.users[userIndex], ...delta };
+    return id;
+  }
+
+  async delete(id: User["id"]): Promise<User["id"]> {
+    this.users = this.users.filter((user) => user.id !== id);
+    return id;
+  }
+}

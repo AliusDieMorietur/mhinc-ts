@@ -1,8 +1,8 @@
-import { milliseconds } from "@/types/common";
-import { ContextError } from "@/types/error";
-import { HttpJsonResult, HttpResult, HttpServiceI } from "@/types/http";
-import { JSONValue } from "@/types/json";
-import { safeParseJson } from "@/utils/safeParseJson";
+import { milliseconds } from "../types/common";
+import { ContextError } from "../types/error";
+import { HttpJsonResult, HttpResult, HttpServiceI } from "../types/http";
+import { JSONValue } from "../types/json";
+import { safeParseJson } from "../utils/safeParseJson";
 import { Buffer } from "node:buffer";
 import streamWeb from "node:stream/web";
 import { setTimeout } from "node:timers";

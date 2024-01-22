@@ -48,3 +48,5 @@ export class AuthenticationError extends ContextError {}
 export class ApiError extends ContextError {}
 
 export class ServiceError extends ContextError {}
+
+export class InitError extends ContextError {}

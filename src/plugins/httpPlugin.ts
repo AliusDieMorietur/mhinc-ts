@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
-import { HttpServiceI } from "@/types/http";
-import { HttpService } from "@/lib/httpService";
+import { HttpServiceI } from "../types/http";
+import { HttpService } from "../lib/httpService";
 
 declare module "fastify" {
   interface FastifyInstance {

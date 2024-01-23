@@ -1,4 +1,5 @@
 import crypto from "node:crypto";
+import { ServiceError } from "../types/error";
 import { User, UserBase } from "../types/user";
 
 export class UserService {
@@ -24,7 +25,7 @@ export class UserService {
   async get(id: User["id"]): Promise<User> {
     const user = this.users.find((user) => user.id === id);
     if (!user) {
-      throw new Error(`User not found with id: ${id}`);
+      throw new ServiceError(`User not found with id: ${id}`);
     }
     return user;
   }
@@ -32,7 +33,7 @@ export class UserService {
   async update(id: User["id"], delta: Partial<UserBase>): Promise<User["id"]> {
     const userIndex = this.users.findIndex((user) => user.id === id);
     if (userIndex === -1) {
-      throw new Error(`User not found with id: ${id}`);
+      throw new ServiceError(`User not found with id: ${id}`);
     }
     this.users[userIndex] = { ...this.users[userIndex], ...delta };
     return id;
@@ -41,5 +42,20 @@ export class UserService {
   async delete(id: User["id"]): Promise<User["id"]> {
     this.users = this.users.filter((user) => user.id !== id);
     return id;
+  }
+
+  async getByChatIdOrCreate(
+    telegramChatId: User["telegramChatId"],
+    name = ""
+  ): Promise<User> {
+    const user = this.users.find(
+      (user) => user.telegramChatId === telegramChatId
+    );
+    if (user) return user;
+    const id = await this.create({
+      telegramChatId,
+      name,
+    });
+    return await this.get(id);
   }
 }

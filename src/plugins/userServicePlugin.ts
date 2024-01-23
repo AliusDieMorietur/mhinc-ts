@@ -11,9 +11,6 @@ declare module "fastify" {
 const userPlugin = async (app: FastifyInstance): Promise<void> => {
   if (app.hasDecorator("userService")) return;
   const userService = new UserService();
-  await userService.create({
-    name: "test",
-  });
   app.decorate("userService", userService);
 };
 

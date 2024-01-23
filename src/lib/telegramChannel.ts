@@ -1,4 +1,4 @@
-import { ChatId } from "@/types/telegram";
+import { ChatId } from "../types/telegram";
 import { ServiceError } from "../types/error";
 import { HttpServiceI } from "../types/http";
 
@@ -35,10 +35,10 @@ export class TelegramChannel {
       { method: "GET" }
     );
 
-    console.log(response);
+    console.log("response", response);
   }
 
-  async sendMessage(text: string, chatId: ChatId) {
+  async sendMessage(chatId: ChatId, text: string) {
     const url = `${this.apiUrl}${this.token}/sendMessage`;
 
     const response = await this.http.requestJson(url, {

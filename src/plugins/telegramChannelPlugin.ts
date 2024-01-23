@@ -1,5 +1,5 @@
 import { InitError } from "../types/error";
-import { TelegramChannel } from "../lib/TelegramChannel";
+import { TelegramChannel } from "../lib/telegramChannel";
 import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 import ngrok from "ngrok";

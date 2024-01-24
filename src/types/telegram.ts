@@ -60,17 +60,20 @@ export type MediaGroupPayload = {
 
 export type From = {
   id: ChatId;
+  first_name?: string;
+  username?: string;
 };
 
 export type Message = {
   message_id: number;
   message_thread_id: number;
-  text: string;
+  text?: string;
   from: From;
   chat: Chat;
   sender_chat?: Chat;
   date: number;
-  photo: Photo[];
+  photo?: Photo[];
+  media_group_id?: string;
 };
 
 export type CallbackQuery = {
@@ -81,7 +84,8 @@ export type CallbackQuery = {
 };
 
 export type Update = {
+  from: any;
   update_id: number;
   message: Message;
-  callbackQuery?: CallbackQuery;
+  callback_query?: CallbackQuery;
 };

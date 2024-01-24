@@ -7,6 +7,8 @@ import { RunnerBase } from "./runnerBase";
 import { TelegramChannel } from "../telegramChannel";
 import { StateManager } from "../stateManager";
 
+export const START_TEXT = "/start - start bot\n/share - share photo";
+
 export type StartRunnerOptions = {
   activityRouter: ActivityRouter;
   telegramChannel: TelegramChannel;
@@ -29,26 +31,19 @@ export class StartRunner extends RunnerBase {
     });
     this.init({
       onMessage: async (context: Context, message: RunnerMessage) => {
-        const state = await this.stateManager.get(context.userId);
-        console.log("state", state);
-        const newState = state.state === "a" ? "b" : "a";
-        const text = state.state === "a" ? "a" : "b";
-        this.telegramChannel.sendMessage(
-          context.telegramChatId,
-          "message" + text
-        );
-
+        // const state = await this.stateManager.get(context.userId);
+        // console.log("state", state);
+        // const newState = state.state === "a" ? "b" : "a";
+        // const text = state.state === "a" ? "a" : "b";
+        this.telegramChannel.sendMessage(context.telegramChatId, START_TEXT);
         this.stateManager.create(context.userId, {
           runner: Runner.START,
-          state: newState,
-          data: { text },
+          state: "none",
+          data: {},
         });
       },
       onStart: (context: Context, args: string[]) => {
-        this.telegramChannel.sendMessage(
-          context.telegramChatId,
-          "This is start message"
-        );
+        this.telegramChannel.sendMessage(context.telegramChatId, START_TEXT);
         this.stateManager.create(context.userId, {
           runner: Runner.START,
           state: "none",

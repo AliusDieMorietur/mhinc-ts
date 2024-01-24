@@ -3,6 +3,7 @@ import { Context } from "../types/context";
 import { Photo } from "../types/telegram";
 import EventEmitter from "node:events";
 import { StateManager } from "./stateManager";
+import { Runner } from "../types/runner";
 
 export type ActivityRouterOptions = {
   stateManager: StateManager;
@@ -15,12 +16,14 @@ export class ActivityRouter extends EventEmitter {
     this.stateManager = stateManager;
   }
 
-  routeCommand(context: Context, command: string, args: string[]) {
-    console.log("ROUTE_COMMAND");
+  route(context: Context, runner: Runner, args: string[]) {
+    console.log("ROUTE_RUNNER");
     console.log("context", context);
-    console.log("command", command);
+    console.log("runner", runner);
     console.log("args", args);
-    this.emit(`runner-start-${command}`, context, args);
+    const emitted = this.emit(`runner-start-${runner}`, context, args);
+    if (emitted) return;
+    console.warn(`Failed to route to runner-start-${runner}`);
   }
 
   async routeMessage(
@@ -33,8 +36,19 @@ export class ActivityRouter extends EventEmitter {
     console.log("ROUTE_MESSAGE");
     console.log("context", context);
     console.log("message", message);
-    const state = this.stateManager.get(context.userId);
-    console.log("state", state);
-    this.emit(`runner-message-${(await state).runner}`, context, message);
+    try {
+      const state = await this.stateManager.get(context.userId);
+      console.log("state", state);
+      const emitted = this.emit(
+        `runner-message-${state.runner}`,
+        context,
+        message
+      );
+      if (emitted) return;
+      console.warn(`Failed to route to runner-message-${state.runner}`);
+    } catch (error) {
+      console.log("error", error);
+      this.emit(`runner-start-${Runner.START}`, context, message);
+    }
   }
 }

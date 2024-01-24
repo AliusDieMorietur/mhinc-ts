@@ -1,6 +1,7 @@
 import { Context } from "../../types/context";
 import { RunnerMessage } from "../../types/runner";
 import { ActivityRouter } from "../activityRouter";
+import { FileStorage } from "../fileStorage";
 import { StateManager } from "../stateManager";
 import { TelegramChannel } from "../telegramChannel";
 
@@ -19,15 +20,15 @@ export class RunnerBase {
   public startEvent: string;
   public messageEvent: string;
   constructor({
+    name,
     activityRouter,
     stateManager,
     telegramChannel,
-    name,
   }: RunnerBaseOptions) {
+    this.name = name;
     this.activityRouter = activityRouter;
     this.telegramChannel = telegramChannel;
     this.stateManager = stateManager;
-    this.name = name;
     this.startEvent = `runner-start-${name}`;
     this.messageEvent = `runner-message-${name}`;
   }

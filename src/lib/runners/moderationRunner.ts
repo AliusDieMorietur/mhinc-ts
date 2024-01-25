@@ -97,7 +97,7 @@ export class ModerationRunner extends RunnerBase {
             );
           }
         } else {
-          this.telegramChannel.sendMessage(chatId, "Your photo was rejected");
+          this.telegramChannel.sendMessage(chatId, "Rejected");
         }
         this.stateManager.create(context.userId, {
           runner: Runner.MODERATION,

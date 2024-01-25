@@ -69,6 +69,26 @@ export class TelegramChannel {
     console.log("response", response);
   }
 
+  async sendVideo(
+    chatId: ChatId,
+    fileId: string,
+    replyMarkup: InlineMarkup = {},
+    caption = ""
+  ) {
+    const url = `${this.apiUrl}${this.token}/sendVideo`;
+    const response = await this.http.requestJson(url, {
+      method: "POST",
+      body: {
+        chat_id: chatId,
+        video: fileId,
+        caption,
+        reply_markup: replyMarkup,
+      },
+    });
+
+    console.log("response", response);
+  }
+
   async sendMediaGroup(photos: Photo[], chatId: ChatId, caption: string) {
     const media = photos.map(({ file_unique_id }) => ({
       type: "photo",

@@ -24,11 +24,20 @@ export type Chat = {
 };
 
 export type Photo = {
-  file_id?: string;
+  file_id: string;
   file_unique_id: string;
   width: number;
   height: number;
   file_size: number;
+};
+
+export type Video = {
+  file_id: string;
+  file_unique_id: string;
+  width: number;
+  height: number;
+  duration: number;
+  file_size?: number;
 };
 
 export type InlineKeyboardButton = {
@@ -74,18 +83,19 @@ export type Message = {
   date: number;
   photo?: Photo[];
   media_group_id?: string;
+  video?: Video;
 };
 
 export type CallbackQuery = {
   id: string;
   from: TelegramUser;
-  message: Message;
+  message?: Message;
   data: string;
 };
 
 export type Update = {
   from: any;
   update_id: number;
-  message: Message;
+  message?: Message;
   callback_query?: CallbackQuery;
 };

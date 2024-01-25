@@ -1,4 +1,4 @@
-import { Photo } from "./telegram";
+import { Photo, Video } from "./telegram";
 
 export enum Runner {
   START = "start",
@@ -11,6 +11,7 @@ export enum Runner {
 export type RunnerMessage = {
   text: string;
   photo: Photo[];
+  video?: Video;
   mediaGroupId?: string;
 };
 

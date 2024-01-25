@@ -7,25 +7,31 @@ import { Runner } from "../types/runner";
 import { Id } from "../types/utils";
 import { randomId } from "../utils/randomId";
 
+export enum FileType {
+  PHOTO = "photo",
+  VIDEO = "video",
+}
+
+export type File = {
+  id: Id;
+  fileId: string;
+  type: FileType;
+};
+
 export type FileStorageOptions = {};
 
 export class FileStorage {
-  private files: Record<
-    Id,
-    {
-      id: Id;
-      fileId: string;
-    }
-  >;
+  private files: Record<Id, File>;
   constructor({}: FileStorageOptions) {
     this.files = {};
   }
 
-  async upload(fileId: string) {
+  async upload(fileId: string, type: FileType) {
     const id = randomId();
     this.files[id] = {
-      fileId,
       id,
+      fileId,
+      type,
     };
     return id;
   }

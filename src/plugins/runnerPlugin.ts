@@ -32,7 +32,12 @@ const runnerPlugin = async (app: FastifyInstance): Promise<void> => {
     echo: new EchoRunner(defaultRunnerOptions),
     unhandled: new UnhandledRunner(defaultRunnerOptions),
     share: new ShareRunner(defaultRunnerOptions),
-    moderation: new ModerationRunner(defaultRunnerOptions),
+    moderation: new ModerationRunner({
+      ...defaultRunnerOptions,
+      storage: {
+        user: app.userService,
+      },
+    }),
   };
   app.decorate("runner", runner);
 };
@@ -44,5 +49,6 @@ export default fp(runnerPlugin, {
     "TelegramChannelPlugin",
     "StateManagerPlugin",
     "FileStoragePlugin",
+    "UserServicePlugin",
   ],
 });

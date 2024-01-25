@@ -7,7 +7,7 @@ import { RunnerBase } from "./runnerBase";
 import { TelegramChannel } from "../telegramChannel";
 import { StateManager } from "../stateManager";
 import { ADMIN_ID } from "../../consts";
-import { FileStorage } from "../fileStorage";
+import { FileStorage, FileType } from "../fileStorage";
 
 export type ShareRunnerOptions = {
   activityRouter: ActivityRouter;
@@ -37,11 +37,34 @@ export class ShareRunner extends RunnerBase {
     this.init({
       onMessage: async (context: Context, message: RunnerMessage) => {
         const state = await this.stateManager.get(context.userId);
+        if (message.video) {
+          const fileId = message.video.file_id;
+          const id = await this.fileStorage.upload(fileId, FileType.VIDEO);
+          const replyMarkup = {
+            inline_keyboard: [
+              [
+                {
+                  text: "Approve",
+                  callback_data: `/moderation approve ${id} ${context.telegramChatId}`,
+                },
+                {
+                  text: "Reject",
+                  callback_data: `/moderation reject ${id} ${context.telegramChatId}`,
+                },
+              ],
+            ],
+          };
+          console.log("context.username", context.username);
+          this.telegramChannel.sendVideo(
+            ADMIN_ID,
+            fileId,
+            replyMarkup,
+            "By: @" + context.name
+          );
+        }
         if (message.photo.length > 0) {
-          const fileId = message.photo.at(-1)!.file_id!;
-          console.log("fileId", fileId);
-          console.log("fileId.length", fileId.length);
-          const id = await this.fileStorage.upload(fileId);
+          const fileId = message.photo.at(-1)!.file_id;
+          const id = await this.fileStorage.upload(fileId, FileType.PHOTO);
           const replyMarkup = {
             inline_keyboard: [
               [

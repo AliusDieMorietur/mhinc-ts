@@ -48,6 +48,8 @@ export class UserService {
     telegramChatId: User["telegramChatId"],
     name = ""
   ): Promise<User> {
+    console.log("this.users", this.users);
+
     const user = this.users.find(
       (user) => user.telegramChatId === telegramChatId
     );
@@ -57,5 +59,16 @@ export class UserService {
       name,
     });
     return await this.get(id);
+  }
+
+  async getByChatId(telegramChatId: User["telegramChatId"]): Promise<User> {
+    console.log("this.users", this.users);
+    const user = this.users.find(
+      (user) => user.telegramChatId === telegramChatId
+    );
+    if (!user) {
+      throw new ServiceError(`User not found with chatId: ${telegramChatId}`);
+    }
+    return user;
   }
 }

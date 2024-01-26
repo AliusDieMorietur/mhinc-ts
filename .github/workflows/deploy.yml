@@ -27,4 +27,7 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_AFTER: |
+            whoami
+            ls -al
             sh /root/devops/mhinc/start.sh
+            echo $RSYNC_STDOUT

@@ -27,6 +27,7 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_AFTER: |
+            cp /root/env/mhinc/.env.prod /root/projects/mhinc
             cd /root/projects/mhinc
             pm2 delete "mhinc" || true
             pm2 start npm --name "mhinc" -- run start:prod

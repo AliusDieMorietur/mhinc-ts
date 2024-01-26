@@ -27,6 +27,7 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_AFTER: |
+            compgen -A function -abck
             whoami
             ls -al
             sh /root/devops/mhinc/start.sh

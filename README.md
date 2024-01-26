@@ -1,4 +1,5 @@
 # mhinc
 
-https://t.me/MentalHealthPlusPlus
-https://t.me/MentalHealthPlusPlusShareBot
+Channel: https://t.me/MentalHealthPlusPlus
+
+Bot: https://t.me/MentalHealthPlusPlusShareBot

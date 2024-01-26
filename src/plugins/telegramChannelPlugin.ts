@@ -14,9 +14,6 @@ const userPlugin = async (app: FastifyInstance): Promise<void> => {
   if (app.hasDecorator("telegramChannel")) return;
   let serverUrl = app.config.serverUrl;
   if (!serverUrl) {
-    if (!app.config.ngrokToken) {
-      throw new InitError("Ngrok token not found ");
-    }
     serverUrl = await ngrok.connect({
       addr: 3008,
     });

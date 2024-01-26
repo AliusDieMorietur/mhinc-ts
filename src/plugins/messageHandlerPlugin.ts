@@ -19,9 +19,5 @@ const messageHandlerPlugin = async (app: FastifyInstance): Promise<void> => {
 
 export default fp(messageHandlerPlugin, {
   name: "MessageHandlerPlugin",
-  dependencies: [
-    "ActivityRouterPlugin",
-    "UserServicePlugin",
-    "TelegramChannelPlugin",
-  ],
+  dependencies: ["ActivityRouterPlugin", "TelegramChannelPlugin"],
 });

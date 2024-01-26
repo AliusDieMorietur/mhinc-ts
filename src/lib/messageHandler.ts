@@ -1,30 +1,19 @@
-import { Context } from "../types/context";
 import { Runner, RunnerMessage } from "../types/runner";
 import { Update } from "../types/telegram";
 import { ActivityRouter } from "./activityRouter";
 import { TelegramChannel } from "./telegramChannel";
-import { UserService } from "./userService";
 
 export type MessageHandlerOptions = {
   activityRouter: ActivityRouter;
   telegramChannel: TelegramChannel;
-  storage: {
-    user: UserService;
-  };
 };
 
 export class MessageHandler {
   private activityRouter: MessageHandlerOptions["activityRouter"];
   private telegramChannel: MessageHandlerOptions["telegramChannel"];
-  private storage: MessageHandlerOptions["storage"];
 
-  constructor({
-    activityRouter,
-    storage,
-    telegramChannel,
-  }: MessageHandlerOptions) {
+  constructor({ activityRouter, telegramChannel }: MessageHandlerOptions) {
     this.activityRouter = activityRouter;
-    this.storage = storage;
     this.telegramChannel = telegramChannel;
   }
 
@@ -44,30 +33,17 @@ export class MessageHandler {
     }
 
     const telegramChatId = telegramMessage.chat.id;
-    const name =
-      telegramMessage.from.username || telegramMessage.from.first_name || "";
-    const user = await this.storage.user.getByChatIdOrCreate(
-      telegramChatId,
-      name
-    );
-    console.log("user", user);
 
     const context = {
-      userId: user.id,
       telegramChatId,
-      name,
     };
     console.log("context", context);
 
-    let values = [""];
-    if (!!telegramMessage.text) {
-      values = telegramMessage.text.split(" ");
-    }
-    if (!!update.callback_query) {
-      values = update.callback_query.data.split(" ");
-    }
+    const text = update.callback_query?.data || telegramMessage.text || "";
+
+    const values = text.split(" ");
     console.log("values", values);
-    const command = values[0];
+    const command = values[0] || "";
     if (command.startsWith("/")) {
       const args = values.slice(1);
       console.log("command", command);
@@ -80,7 +56,7 @@ export class MessageHandler {
       this.activityRouter.route(context, route, args);
     } else {
       const message: RunnerMessage = {
-        text: telegramMessage.text || "",
+        text,
         photo: telegramMessage.photo || [],
         video: telegramMessage.video,
         mediaGroupId: telegramMessage.media_group_id,

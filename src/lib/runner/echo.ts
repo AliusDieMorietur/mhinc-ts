@@ -3,30 +3,22 @@ import { Runner, RunnerMessage } from "../../types/runner";
 import { ActivityRouter } from "../activityRouter";
 import { StateManager } from "../stateManager";
 import { TelegramChannel } from "../telegramChannel";
-import { RunnerBase } from "./runnerBase";
+import { RunnerBase } from "./base";
+import { RunnerBaseExtended, RunnerBaseExtendedOptions } from "./baseExtended";
 
-export type EchoRunnerOptions = {
-  activityRouter: ActivityRouter;
-  telegramChannel: TelegramChannel;
-  stateManager: StateManager;
-};
+export type EchoRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name">;
 
-export class EchoRunner extends RunnerBase {
-  constructor({
-    activityRouter,
-    stateManager,
-    telegramChannel,
-  }: EchoRunnerOptions) {
+export class EchoRunner extends RunnerBaseExtended {
+  constructor(options: EchoRunnerOptions) {
+    console.log("Echo_RUNNER_CONSTRUCTOR");
     super({
       name: Runner.ECHO,
-      activityRouter,
-      telegramChannel,
-      stateManager,
+      ...options,
     });
     this.init({
       onMessage: (context: Context, message: RunnerMessage) => {
         this.telegramChannel.sendMessage(context.telegramChatId, message.text);
-        this.stateManager.create(context.userId, {
+        this.stateManager.create(context.telegramChatId, {
           runner: Runner.ECHO,
           state: "none",
           data: {},
@@ -37,7 +29,7 @@ export class EchoRunner extends RunnerBase {
           context.telegramChatId,
           "echo: " + args.join(" ")
         );
-        this.stateManager.create(context.userId, {
+        this.stateManager.create(context.telegramChatId, {
           runner: Runner.ECHO,
           state: "none",
           data: {},

@@ -1,7 +1,5 @@
-import { User } from "./user";
+import { ChatId } from "./telegram";
 
 export type Context = {
-  userId: User["id"];
-  telegramChatId: User["telegramChatId"];
-  name: string;
+  telegramChatId: ChatId;
 } & Record<string, unknown>;

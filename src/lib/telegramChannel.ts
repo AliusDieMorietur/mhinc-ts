@@ -38,12 +38,16 @@ export class TelegramChannel {
     console.log("response", response);
   }
 
-  async sendMessage(chatId: ChatId, text: string) {
+  async sendMessage(
+    chatId: ChatId,
+    text: string,
+    replyMarkup: InlineMarkup = {}
+  ) {
     const url = `${this.apiUrl}${this.token}/sendMessage`;
 
     const response = await this.http.requestJson(url, {
       method: "POST",
-      body: { text, chat_id: chatId },
+      body: { text, chat_id: chatId, reply_markup: replyMarkup },
     });
 
     console.log("response", response);

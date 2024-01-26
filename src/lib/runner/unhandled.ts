@@ -1,27 +1,18 @@
 import { Context } from "../../types/context";
 import { Runner, RunnerMessage } from "../../types/runner";
-import { ActivityRouter } from "../activityRouter";
-import { StateManager } from "../stateManager";
-import { TelegramChannel } from "../telegramChannel";
-import { RunnerBase } from "./runnerBase";
+import { RunnerBaseExtended, RunnerBaseExtendedOptions } from "./baseExtended";
 
-export type UnhandledRunnerOptions = {
-  activityRouter: ActivityRouter;
-  telegramChannel: TelegramChannel;
-  stateManager: StateManager;
-};
+export type UnhandledRunnerOptions = {} & Omit<
+  RunnerBaseExtendedOptions,
+  "name"
+>;
 
-export class UnhandledRunner extends RunnerBase {
-  constructor({
-    activityRouter,
-    stateManager,
-    telegramChannel,
-  }: UnhandledRunnerOptions) {
+export class UnhandledRunner extends RunnerBaseExtended {
+  constructor(options: UnhandledRunnerOptions) {
+    console.log("Unhandled_RUNNER_CONSTRUCTOR");
     super({
       name: Runner.UNHANDLED,
-      activityRouter,
-      telegramChannel,
-      stateManager,
+      ...options,
     });
     this.init({
       onMessage: (context: Context, message: RunnerMessage) => {
@@ -29,7 +20,7 @@ export class UnhandledRunner extends RunnerBase {
           context.telegramChatId,
           "return to main /start"
         );
-        this.stateManager.create(context.userId, {
+        this.stateManager.create(context.telegramChatId, {
           runner: Runner.UNHANDLED,
           state: "none",
           data: {},
@@ -37,7 +28,7 @@ export class UnhandledRunner extends RunnerBase {
       },
       onStart: (context: Context, args: string[]) => {
         this.telegramChannel.sendMessage(context.telegramChatId, "Unhandled");
-        this.stateManager.create(context.userId, {
+        this.stateManager.create(context.telegramChatId, {
           runner: Runner.UNHANDLED,
           state: "none",
           data: {},

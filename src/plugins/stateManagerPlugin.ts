@@ -1,6 +1,5 @@
 import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
-import { UserService } from "../lib/userService";
 import { StateManager } from "../lib/stateManager";
 
 declare module "fastify" {
@@ -9,13 +8,13 @@ declare module "fastify" {
   }
 }
 
-const stateManagerPlugin = async (app: FastifyInstance): Promise<void> => {
+const StateManagerPlugin = async (app: FastifyInstance): Promise<void> => {
   if (app.hasDecorator("stateManager")) return;
   const stateManager = new StateManager();
   app.decorate("stateManager", stateManager);
 };
 
-export default fp(stateManagerPlugin, {
+export default fp(StateManagerPlugin, {
   name: "StateManagerPlugin",
   dependencies: [],
 });

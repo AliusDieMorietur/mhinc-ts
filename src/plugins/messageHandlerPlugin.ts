@@ -1,7 +1,6 @@
 import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 import { MessageHandler } from "../lib/messageHandler";
-import { UserService } from "../lib/userService";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -14,9 +13,6 @@ const messageHandlerPlugin = async (app: FastifyInstance): Promise<void> => {
   const messageHandler = new MessageHandler({
     activityRouter: app.activityRouter,
     telegramChannel: app.telegramChannel,
-    storage: {
-      user: app.userService,
-    },
   });
   app.decorate("messageHandler", messageHandler);
 };

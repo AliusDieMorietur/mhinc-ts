@@ -18,7 +18,7 @@ const userPlugin = async (app: FastifyInstance): Promise<void> => {
       throw new InitError("Ngrok token not found ");
     }
     serverUrl = await ngrok.connect({
-      token: app.config.ngrokToken,
+      // token: app.config.ngrokToken,
       addr: 3008,
     });
   }

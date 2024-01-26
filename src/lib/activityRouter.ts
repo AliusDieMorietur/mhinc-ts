@@ -37,7 +37,7 @@ export class ActivityRouter extends EventEmitter {
     console.log("context", context);
     console.log("message", message);
     try {
-      const state = await this.stateManager.get(context.userId);
+      const state = await this.stateManager.get(context.telegramChatId);
       console.log("state", state);
       const emitted = this.emit(
         `runner-message-${state.runner}`,

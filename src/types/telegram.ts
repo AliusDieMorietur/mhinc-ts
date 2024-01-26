@@ -12,7 +12,7 @@ export type TelegramUser = {
   supports_inline_queries?: boolean;
 };
 
-export type ChatId = string | number;
+export type ChatId = number;
 
 export type Chat = {
   id: ChatId;
@@ -43,6 +43,7 @@ export type Video = {
 export type InlineKeyboardButton = {
   text: string;
   callback_data?: string;
+  url?: string;
 };
 
 export type InlineMarkup = {

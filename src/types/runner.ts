@@ -6,6 +6,7 @@ export enum Runner {
   UNHANDLED = "unhandled",
   MODERATION = "moderation",
   SHARE = "share",
+  HELP = "help",
 }
 
 export type RunnerMessage = {

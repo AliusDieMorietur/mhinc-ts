@@ -1,0 +1,21 @@
+{
+  "translation": {
+    "label": {
+      "ChooseLanguage": "Будь ласка оберіть мову\nPlease choose language",
+      "Start": "Hello! In this bot, you can share photos or videos of things that can make people happier!\n\nCommands:\n/start - Greetings\n/share - Share photo or video\n/help - Help\n\nLink to the channel: https://t.me/MentalHealthPlusPlus",
+      "Help": "1. Enter /share\n2. Choose anonymously or not\n3. Send a photo or video\n4. Wait for the appearance of content in the channel\n Link to the channel: https://t.me/MentalHealthPlusPlus",
+      "YourContentWasApproved": "Your content was approved",
+      "YourContentWasRejected": "Your content was rejected",
+      "NowYouCanSendPhotosOrVideos": "Now you can send photos or videos",
+      "DoYouWantToStayAnonymous": "Do you want to stay anonymous?",
+      "Anonymous": "Anonymous",
+      "Sent": "Sent"
+    },
+    "button": {
+      "Approve": "Approve",
+      "Reject": "Reject",
+      "Yes": "Yes",
+      "No": "No"
+    }
+  }
+}

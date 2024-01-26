@@ -1,7 +1,7 @@
 import { Context } from "../../types/context";
 import { RunnerMessage } from "../../types/runner";
 import { ActivityRouter } from "../activityRouter";
-import { FileStorage } from "../fileStorage";
+import { FileStorage } from "../../storage/file";
 import { StateManager } from "../stateManager";
 import { TelegramChannel } from "../telegramChannel";
 
@@ -11,6 +11,9 @@ export type RunnerBaseOptions = {
   stateManager: StateManager;
   name: string;
 };
+
+export type MessageHandler = (context: Context, message: RunnerMessage) => void;
+export type StartHandler = (context: Context, args: string[]) => void;
 
 export class RunnerBase {
   public activityRouter: RunnerBaseOptions["activityRouter"];
@@ -37,8 +40,8 @@ export class RunnerBase {
     onStart,
     onMessage,
   }: {
-    onStart: (context: Context, args: string[]) => void;
-    onMessage: (context: Context, message: RunnerMessage) => void;
+    onStart: StartHandler;
+    onMessage: MessageHandler;
   }) {
     this.activityRouter.on(this.startEvent, onStart);
     this.activityRouter.on(this.messageEvent, onMessage);

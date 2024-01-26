@@ -1,10 +1,11 @@
 import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
-import { StartRunner } from "../lib/runners/startRunner";
-import { EchoRunner } from "../lib/runners/echoRunner";
-import { UnhandledRunner } from "../lib/runners/unhandledRunner";
-import { ShareRunner } from "../lib/runners/shareRunner";
-import { ModerationRunner } from "../lib/runners/moderationRunner";
+import { StartRunner } from "../lib/runner/start";
+import { EchoRunner } from "../lib/runner/echo";
+import { UnhandledRunner } from "../lib/runner/unhandled";
+import { ShareRunner } from "../lib/runner/share";
+import { ModerationRunner } from "../lib/runner/moderation";
+import { HelpRunner } from "../lib/runner/help";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -14,30 +15,27 @@ declare module "fastify" {
       unhandled: UnhandledRunner;
       share: ShareRunner;
       moderation: ModerationRunner;
+      help: HelpRunner;
     };
   }
 }
 
 const runnerPlugin = async (app: FastifyInstance): Promise<void> => {
   if (app.hasDecorator("runner")) return;
-  console.log("app.telegramChannel", app.telegramChannel);
   const defaultRunnerOptions = {
     activityRouter: app.activityRouter,
     telegramChannel: app.telegramChannel,
     stateManager: app.stateManager,
-    fileStorage: app.fileStorage,
+    storage: app.storage,
+    localizationService: app.localizationService,
   };
   const runner = {
     start: new StartRunner(defaultRunnerOptions),
     echo: new EchoRunner(defaultRunnerOptions),
     unhandled: new UnhandledRunner(defaultRunnerOptions),
     share: new ShareRunner(defaultRunnerOptions),
-    moderation: new ModerationRunner({
-      ...defaultRunnerOptions,
-      storage: {
-        user: app.userService,
-      },
-    }),
+    moderation: new ModerationRunner(defaultRunnerOptions),
+    help: new HelpRunner(defaultRunnerOptions),
   };
   app.decorate("runner", runner);
 };
@@ -48,7 +46,7 @@ export default fp(runnerPlugin, {
     "ActivityRouterPlugin",
     "TelegramChannelPlugin",
     "StateManagerPlugin",
-    "FileStoragePlugin",
-    "UserServicePlugin",
+    "StoragePlugin",
+    "LocalizationServicePlugin",
   ],
 });

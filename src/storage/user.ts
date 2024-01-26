@@ -2,7 +2,7 @@ import crypto from "node:crypto";
 import { ServiceError } from "../types/error";
 import { User, UserBase } from "../types/user";
 
-export class UserService {
+export class UserStorage {
   private users: User[];
 
   constructor() {
@@ -44,20 +44,14 @@ export class UserService {
     return id;
   }
 
-  async getByChatIdOrCreate(
-    telegramChatId: User["telegramChatId"],
-    name = ""
-  ): Promise<User> {
+  async getByChatIdOrCreate(base: UserBase): Promise<User> {
     console.log("this.users", this.users);
 
     const user = this.users.find(
-      (user) => user.telegramChatId === telegramChatId
+      (user) => user.telegramChatId === base.telegramChatId
     );
     if (user) return user;
-    const id = await this.create({
-      telegramChatId,
-      name,
-    });
+    const id = await this.create(base);
     return await this.get(id);
   }
 

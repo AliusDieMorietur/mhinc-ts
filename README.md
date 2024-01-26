@@ -1,3 +1,3 @@
 # mhinc
 
-Tg Bot
+https://t.me/MentalHealthPlusPlusShareBot

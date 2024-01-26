@@ -29,5 +29,5 @@ jobs:
           SCRIPT_AFTER: |
             cp /root/env/mhinc/.env.prod /root/projects/mhinc
             cd /root/projects/mhinc
-            pm2 delete "mhinc" || true
-            pm2 start npm --name "mhinc" -- run start:prod
+            /root/.nvm/versions/node/v18.19.0/bin/pm2 delete "mhinc" || true
+            /root/.nvm/versions/node/v18.19.0/bin/pm2 start npm --name "mhinc" -- run start:prod

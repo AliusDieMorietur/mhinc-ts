@@ -27,7 +27,6 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_AFTER: |
-            export ENV=prod
             cp /root/env/mhinc/.env.prod /root/projects/mhinc
             cd /root/projects/mhinc
             /root/.nvm/versions/node/v18.19.0/bin/pm2 delete "mhinc" || true

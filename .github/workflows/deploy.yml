@@ -27,8 +27,11 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_AFTER: |
-            compgen -A function -abck
-            whoami
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
             ls -al
-            sh /root/devops/mhinc/start.sh
-            echo $RSYNC_STDOUT
+            cp /root/env/mhinc/.env.prod /root/projects/mhinc
+            cd /root/projects/mhinc
+            pm2 delete "mhinc" || true
+            pm2 start npm --name "mhinc" -- run start:prod

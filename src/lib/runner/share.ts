@@ -50,6 +50,8 @@ export class ShareRunner extends RunnerBaseExtended {
         );
         console.log("SHARE");
         console.log("user", user);
+        console.log("message", message);
+        console.log("state", state);
         if (!message.video && message.photo.length === 0) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
@@ -71,7 +73,10 @@ export class ShareRunner extends RunnerBaseExtended {
           const fileId = message.photo.at(-1)!.file_id;
           this.sendPhoto(context, fileId, caption);
         }
-        if (message.mediaGroupId !== state.data.mediaGroupId) {
+        if (
+          message.mediaGroupId !== state.data.mediaGroupId ||
+          (!state.data.mediaGroupId && !message.mediaGroupId)
+        ) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
             this.localizationService.resolve("label.Sent", user.language)

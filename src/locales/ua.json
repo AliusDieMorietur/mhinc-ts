@@ -3,7 +3,7 @@
     "label": {
       "ChooseLanguage": "Будь ласка оберіть мову\nPlease choose language",
       "Start": "Привіт! У цьому боті ти можеш поділитися фото або відео тим, які може зробити людей щасливішими!\n\nКоманди:\n/start - Вітання\n/share - Поділитися фото або відео\n/help - Допомога\n\nПосилання на канал: https://t.me/MentalHealthPlusPlus",
-      "Help": "1. ВВедіть /share\n2. Оберіть анонімно чи ні\n3. Відправте фото чи відео\n4. Очікуйте на появу контенту в каналі\n Посилання на канал: https://t.me/MentalHealthPlusPlus",
+      "Help": "1. Ведіть /share\n2. Оберіть анонімно чи ні\n3. Відправте фото чи відео\n4. Очікуйте на появу контенту в каналі\nПосилання на канал: https://t.me/MentalHealthPlusPlus",
       "YourContentWasApproved": "Ваш контент був схвалений",
       "YourContentWasRejected": "Ваш контент був відхилений",
       "NowYouCanSendPhotosOrVideos": "Зараз ви можете відправити фото чи відео",

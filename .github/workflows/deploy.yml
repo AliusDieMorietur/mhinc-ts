@@ -27,10 +27,10 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_AFTER: |
+            export ENV=prod
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
-            ls -al
             cp /root/env/mhinc/.env.prod /root/projects/mhinc
             cd /root/projects/mhinc
             pm2 delete "mhinc" || true

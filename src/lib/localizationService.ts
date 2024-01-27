@@ -17,7 +17,6 @@ export class LocalizationService {
   private resources: LocalizationServiceOptions["resources"];
   private i18next: i18n;
   constructor({ defaultLanguage, resources }: LocalizationServiceOptions) {
-    console.log("resources", JSON.stringify(resources, null, 2));
     this.i18next = createInstance();
     this.defaultLanguage = defaultLanguage;
     this.resources = resources;
@@ -34,11 +33,7 @@ export class LocalizationService {
     });
   }
 
-  resolve(
-    id: string,
-    language: string | null,
-    context: Record<string, unknown> = {}
-  ): string {
+  resolve(id: string, language: string | null, context: Record<string, unknown> = {}): string {
     const t = this.i18next.getFixedT(language ?? this.defaultLanguage);
     return t(id, context);
   }

@@ -22,12 +22,7 @@ export class RunnerBase {
   public name: string;
   public startEvent: string;
   public messageEvent: string;
-  constructor({
-    name,
-    activityRouter,
-    stateManager,
-    telegramChannel,
-  }: RunnerBaseOptions) {
+  constructor({ name, activityRouter, stateManager, telegramChannel }: RunnerBaseOptions) {
     this.name = name;
     this.activityRouter = activityRouter;
     this.telegramChannel = telegramChannel;
@@ -36,13 +31,7 @@ export class RunnerBase {
     this.messageEvent = `runner-message-${name}`;
   }
 
-  init({
-    onStart,
-    onMessage,
-  }: {
-    onStart: StartHandler;
-    onMessage: MessageHandler;
-  }) {
+  init({ onStart, onMessage }: { onStart: StartHandler; onMessage: MessageHandler }) {
     this.activityRouter.on(this.startEvent, onStart);
     this.activityRouter.on(this.messageEvent, onMessage);
   }

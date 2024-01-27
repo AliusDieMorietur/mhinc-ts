@@ -11,7 +11,9 @@ declare module "fastify" {
 
 const httpPlugin = async (app: FastifyInstance): Promise<void> => {
   if (app.hasDecorator("http")) return;
-  const http = new HttpService({});
+  const http = new HttpService({
+    defaultTimeout: 25000,
+  });
   app.decorate("http", http);
 };
 

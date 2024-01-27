@@ -13,13 +13,8 @@ export class HelpRunner extends RunnerBaseExtended {
     });
     this.init({
       onMessage: async (context: Context, message: RunnerMessage) => {
-        const user = await this.storage.user.getByChatId(
-          context.telegramChatId
-        );
-        const text = this.localizationService.resolve(
-          "label.Help",
-          user.language
-        );
+        const user = await this.storage.user.getByChatId(context.telegramChatId);
+        const text = this.localizationService.resolve("label.Help", user.language);
         this.telegramChannel.sendMessage(context.telegramChatId, text);
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.HELP,
@@ -28,13 +23,8 @@ export class HelpRunner extends RunnerBaseExtended {
         });
       },
       onStart: async (context: Context, args: string[]) => {
-        const user = await this.storage.user.getByChatId(
-          context.telegramChatId
-        );
-        const text = this.localizationService.resolve(
-          "label.Help",
-          user.language
-        );
+        const user = await this.storage.user.getByChatId(context.telegramChatId);
+        const text = this.localizationService.resolve("label.Help", user.language);
         this.telegramChannel.sendMessage(context.telegramChatId, text);
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.HELP,

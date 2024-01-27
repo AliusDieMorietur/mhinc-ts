@@ -4,15 +4,9 @@ import { FileType } from "../../types/file";
 import { Runner, RunnerMessage } from "../../types/runner";
 import { RunnerBaseExtended, RunnerBaseExtendedOptions } from "./baseExtended";
 
-export const MODERATION_TEXT =
-  "/moderation - moderation bot\n /moderation - moderation photo";
-
 export const NO_PERMISSION_TEXT = "no permission";
 
-export type ModerationRunnerOptions = {} & Omit<
-  RunnerBaseExtendedOptions,
-  "name"
->;
+export type ModerationRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name">;
 
 export class ModerationRunner extends RunnerBaseExtended {
   constructor(options: ModerationRunnerOptions) {
@@ -21,13 +15,19 @@ export class ModerationRunner extends RunnerBaseExtended {
       name: Runner.MODERATION,
       ...options,
     });
+    const typeToMethod = {
+      [FileType.PHOTO]: this.telegramChannel.sendPhoto,
+      [FileType.VIDEO]: this.telegramChannel.sendVideo,
+      [FileType.ANIMATION]: this.telegramChannel.sendAnimation,
+    };
     this.init({
       onMessage: async (context: Context, message: RunnerMessage) => {},
       onStart: async (context: Context, args: string[]) => {
+        const user = await this.storage.user.getByChatId(context.telegramChatId);
         if (context.telegramChatId !== ADMIN_ID) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
-            NO_PERMISSION_TEXT
+            this.localizationService.resolve("label.NoPermission", user.language),
           );
           this.activityRouter.route(context, Runner.START, []);
           return;
@@ -36,39 +36,20 @@ export class ModerationRunner extends RunnerBaseExtended {
         const [command, id, chatId, caption] = args;
         const chatIdNumber = Number(chatId);
         const file = await this.storage.file.get(id);
-        const user = await this.storage.user.getByChatId(chatIdNumber);
+        const author = await this.storage.user.getByChatId(chatIdNumber);
         if (command === "approve") {
           if (file) {
-            if (file.type === FileType.PHOTO) {
-              this.telegramChannel.sendPhoto(
-                CHANNEL_ID,
-                file.fileId,
-                {},
-                caption
-              );
-            } else {
-              this.telegramChannel.sendVideo(
-                CHANNEL_ID,
-                file.fileId,
-                {},
-                caption
-              );
-            }
+            const method = typeToMethod[file.type];
+            method(CHANNEL_ID, file.fileId, {}, caption);
             this.telegramChannel.sendMessage(
               chatIdNumber,
-              this.localizationService.resolve(
-                "label.YourContentWasApproved",
-                user.language
-              )
+              this.localizationService.resolve("label.YourContentWasApproved", author.language),
             );
           }
         } else {
           this.telegramChannel.sendMessage(
             chatIdNumber,
-            this.localizationService.resolve(
-              "label.YourContentWasRejected",
-              user.language
-            )
+            this.localizationService.resolve("label.YourContentWasRejected", author.language),
           );
         }
         this.stateManager.create(context.telegramChatId, {

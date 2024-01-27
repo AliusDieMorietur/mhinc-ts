@@ -50,9 +50,7 @@ export class MessageHandler {
       console.log("args", args);
       const runnerName = command.slice(1) as Runner;
       const variants = Object.values(Runner);
-      const route = variants.includes(runnerName)
-        ? runnerName
-        : Runner.UNHANDLED;
+      const route = variants.includes(runnerName) ? runnerName : Runner.UNHANDLED;
       this.activityRouter.route(context, route, args);
     } else {
       const message: RunnerMessage = {
@@ -60,6 +58,7 @@ export class MessageHandler {
         photo: telegramMessage.photo || [],
         video: telegramMessage.video,
         mediaGroupId: telegramMessage.media_group_id,
+        animation: telegramMessage.animation,
       };
       console.log("message", message);
       this.activityRouter.routeMessage(context, message);

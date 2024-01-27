@@ -47,9 +47,7 @@ export class UserStorage {
   async getByChatIdOrCreate(base: UserBase): Promise<User> {
     console.log("this.users", this.users);
 
-    const user = this.users.find(
-      (user) => user.telegramChatId === base.telegramChatId
-    );
+    const user = this.users.find((user) => user.telegramChatId === base.telegramChatId);
     if (user) return user;
     const id = await this.create(base);
     return await this.get(id);
@@ -57,9 +55,7 @@ export class UserStorage {
 
   async getByChatId(telegramChatId: User["telegramChatId"]): Promise<User> {
     console.log("this.users", this.users);
-    const user = this.users.find(
-      (user) => user.telegramChatId === telegramChatId
-    );
+    const user = this.users.find((user) => user.telegramChatId === telegramChatId);
     if (!user) {
       throw new ServiceError(`User not found with chatId: ${telegramChatId}`);
     }

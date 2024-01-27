@@ -2,10 +2,7 @@ import { Context } from "../../types/context";
 import { Runner, RunnerMessage } from "../../types/runner";
 import { RunnerBaseExtended, RunnerBaseExtendedOptions } from "./baseExtended";
 
-export type UnhandledRunnerOptions = {} & Omit<
-  RunnerBaseExtendedOptions,
-  "name"
->;
+export type UnhandledRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name">;
 
 export class UnhandledRunner extends RunnerBaseExtended {
   constructor(options: UnhandledRunnerOptions) {
@@ -16,10 +13,7 @@ export class UnhandledRunner extends RunnerBaseExtended {
     });
     this.init({
       onMessage: (context: Context, message: RunnerMessage) => {
-        this.telegramChannel.sendMessage(
-          context.telegramChatId,
-          "return to main /start"
-        );
+        this.telegramChannel.sendMessage(context.telegramChatId, "return to main /start");
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.UNHANDLED,
           state: "none",

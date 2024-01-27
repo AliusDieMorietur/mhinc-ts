@@ -25,10 +25,7 @@ export class EchoRunner extends RunnerBaseExtended {
         });
       },
       onStart: (context: Context, args: string[]) => {
-        this.telegramChannel.sendMessage(
-          context.telegramChatId,
-          "echo: " + args.join(" ")
-        );
+        this.telegramChannel.sendMessage(context.telegramChatId, "echo: " + args.join(" "));
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.ECHO,
           state: "none",

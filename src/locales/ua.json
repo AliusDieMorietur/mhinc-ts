@@ -9,7 +9,8 @@
       "NowYouCanSendPhotosOrVideos": "Зараз ви можете відправити фото чи відео",
       "DoYouWantToStayAnonymous": "Чи ви бажаєте поділитися анонімно?",
       "Anonymous": "Анонім",
-      "Sent": "Відправлено"
+      "Sent": "Відправлено",
+      "NoPermission": "Немаэ прав"
     },
     "button": {
       "Approve": "Схвалити",

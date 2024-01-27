@@ -1,8 +1,6 @@
 import { JSONObject } from "./json.js";
 
-export function expandError(
-  err: Error & { toJSON?: () => Record<string, unknown> }
-) {
+export function expandError(err: Error & { toJSON?: () => Record<string, unknown> }) {
   const base = typeof err.toJSON === "function" ? err.toJSON() : { ...err };
   const name =
     Object.prototype.toString.call(err.constructor) === "[object Function]"
@@ -11,9 +9,7 @@ export function expandError(
   return { ...base, name, message: err.message, stack: err.stack };
 }
 
-export function expandErrorsToJson(
-  data: Record<string, unknown>
-): Record<string, unknown> {
+export function expandErrorsToJson(data: Record<string, unknown>): Record<string, unknown> {
   for (const key of Object.keys(data)) {
     const val = data[key];
     if (val instanceof Error) {

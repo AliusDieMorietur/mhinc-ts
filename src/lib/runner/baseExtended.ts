@@ -20,11 +20,7 @@ export type RunnerBaseExtendedOptions = {
 export class RunnerBaseExtended extends RunnerBase {
   public localizationService: RunnerBaseExtendedOptions["localizationService"];
   public storage: RunnerBaseExtendedOptions["storage"];
-  constructor({
-    localizationService,
-    storage,
-    ...baseOptions
-  }: RunnerBaseExtendedOptions) {
+  constructor({ localizationService, storage, ...baseOptions }: RunnerBaseExtendedOptions) {
     super(baseOptions);
     this.storage = storage;
     this.localizationService = localizationService;

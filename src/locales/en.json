@@ -9,7 +9,8 @@
       "NowYouCanSendPhotosOrVideos": "Now you can send photos or videos",
       "DoYouWantToStayAnonymous": "Do you want to stay anonymous?",
       "Anonymous": "Anonymous",
-      "Sent": "Sent"
+      "Sent": "Sent",
+      "NoPermission": "No permission"
     },
     "button": {
       "Approve": "Approve",

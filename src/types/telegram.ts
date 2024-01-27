@@ -40,6 +40,15 @@ export type Video = {
   file_size?: number;
 };
 
+export type Animation = {
+  file_id: string;
+  file_unique_id: string;
+  width: number;
+  height: number;
+  duration: number;
+  file_size?: number;
+};
+
 export type InlineKeyboardButton = {
   text: string;
   callback_data?: string;
@@ -85,6 +94,7 @@ export type Message = {
   photo?: Photo[];
   media_group_id?: string;
   video?: Video;
+  animation?: Animation;
 };
 
 export type CallbackQuery = {

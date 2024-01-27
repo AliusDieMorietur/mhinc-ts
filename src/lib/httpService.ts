@@ -24,9 +24,7 @@ export interface RequestOptions {
   keepalive?: boolean;
 }
 
-export async function* streamAsyncIterator<T>(
-  stream: ReadableStream<T>
-): AsyncIterable<T> {
+export async function* streamAsyncIterator<T>(stream: ReadableStream<T>): AsyncIterable<T> {
   // Get a lock on the stream
   const reader = stream.getReader();
 
@@ -51,7 +49,7 @@ export class HttpService implements HttpServiceI {
 
   requestBase = async (
     url: string | URL,
-    { query, headers, timeout, body, ...requestOptions }: RequestOptions
+    { query, headers, timeout, body, ...requestOptions }: RequestOptions,
   ): Promise<{
     data: Body;
     statusCode: number;
@@ -124,16 +122,11 @@ export class HttpService implements HttpServiceI {
     }
   };
 
-  request = async (
-    url: string | URL,
-    options: RequestOptions
-  ): Promise<HttpResult> => {
+  request = async (url: string | URL, options: RequestOptions): Promise<HttpResult> => {
     const res = await this.requestBase(url, options);
 
     return {
-      data:
-        res.data.body &&
-        Readable.fromWeb(res.data.body as streamWeb.ReadableStream),
+      data: res.data.body && Readable.fromWeb(res.data.body as streamWeb.ReadableStream),
       statusCode: res.statusCode,
       ok: res.ok,
     };
@@ -141,7 +134,7 @@ export class HttpService implements HttpServiceI {
 
   requestJson = async <T = JSONValue>(
     url: string | URL,
-    options: RequestOptions
+    options: RequestOptions,
   ): Promise<HttpJsonResult<T>> => {
     const res = await this.requestBase(url, options);
     const data = await res.data.text();

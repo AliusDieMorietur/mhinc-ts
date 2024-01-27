@@ -21,9 +21,7 @@ export class StartRunner extends RunnerBaseExtended {
 
     const states: Record<string, MessageHandler> = {
       [StartRunnerState.CHOOSE_LANGUAGE]: async (context, message) => {
-        const user = await this.storage.user.getByChatId(
-          context.telegramChatId
-        );
+        const user = await this.storage.user.getByChatId(context.telegramChatId);
         const allowedLanguages = Object.values(Language) as string[];
         console.log("allowedLanguages", allowedLanguages);
         console.log("message.text", message.text);
@@ -47,15 +45,8 @@ export class StartRunner extends RunnerBaseExtended {
             })),
           ],
         };
-        const text = this.localizationService.resolve(
-          "label.ChooseLanguage",
-          user.language
-        );
-        this.telegramChannel.sendMessage(
-          context.telegramChatId,
-          text,
-          replyMarkup
-        );
+        const text = this.localizationService.resolve("label.ChooseLanguage", user.language);
+        this.telegramChannel.sendMessage(context.telegramChatId, text, replyMarkup);
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.START,
           state: StartRunnerState.CHOOSE_LANGUAGE,
@@ -63,13 +54,8 @@ export class StartRunner extends RunnerBaseExtended {
         });
       },
       [StartRunnerState.GREETINGS]: async (context, message) => {
-        const user = await this.storage.user.getByChatId(
-          context.telegramChatId
-        );
-        const text = this.localizationService.resolve(
-          "label.Start",
-          user.language
-        );
+        const user = await this.storage.user.getByChatId(context.telegramChatId);
+        const text = this.localizationService.resolve("label.Start", user.language);
         this.telegramChannel.sendMessage(context.telegramChatId, text);
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.START,
@@ -86,13 +72,8 @@ export class StartRunner extends RunnerBaseExtended {
         if (handler) handler(context, message);
       },
       onStart: async (context: Context, args: string[]) => {
-        const user = await this.storage.user.getByChatId(
-          context.telegramChatId
-        );
-        const text = this.localizationService.resolve(
-          "label.ChooseLanguage",
-          user.language
-        );
+        const user = await this.storage.user.getByChatId(context.telegramChatId);
+        const text = this.localizationService.resolve("label.ChooseLanguage", user.language);
         const allowedLanguages = Object.values(Language);
         const replyMarkup = {
           inline_keyboard: [
@@ -102,11 +83,7 @@ export class StartRunner extends RunnerBaseExtended {
             })),
           ],
         };
-        this.telegramChannel.sendMessage(
-          context.telegramChatId,
-          text,
-          replyMarkup
-        );
+        this.telegramChannel.sendMessage(context.telegramChatId, text, replyMarkup);
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.START,
           state: StartRunnerState.CHOOSE_LANGUAGE,

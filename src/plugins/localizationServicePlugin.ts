@@ -18,9 +18,7 @@ declare module "fastify" {
   }
 }
 
-const localizationServicePlugin = async (
-  app: FastifyInstance
-): Promise<void> => {
+const localizationServicePlugin = async (app: FastifyInstance): Promise<void> => {
   if (app.hasDecorator("localizationService")) return;
   const localizationService = new LocalizationService({
     defaultLanguage: Language.EN,

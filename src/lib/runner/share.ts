@@ -26,9 +26,7 @@ export class ShareRunner extends RunnerBaseExtended {
     });
     const states: Record<string, MessageHandler> = {
       [ShareRunnerState.CONFIDENTIALITY]: async (context, message) => {
-        const user = await this.storage.user.getByChatId(
-          context.telegramChatId
-        );
+        const user = await this.storage.user.getByChatId(context.telegramChatId);
         const buttonOptions = Object.values(ConfidentialityReply) as string[];
         if (buttonOptions.includes(message.text)) {
           this.stateManager.create(context.telegramChatId, {
@@ -45,9 +43,7 @@ export class ShareRunner extends RunnerBaseExtended {
       },
       [ShareRunnerState.SHARE]: async (context, message) => {
         const state = await this.stateManager.get(context.telegramChatId);
-        const user = await this.storage.user.getByChatId(
-          context.telegramChatId
-        );
+        const user = await this.storage.user.getByChatId(context.telegramChatId);
         console.log("SHARE");
         console.log("user", user);
         console.log("message", message);
@@ -55,16 +51,12 @@ export class ShareRunner extends RunnerBaseExtended {
         if (!message.video && message.photo.length === 0) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
-            this.localizationService.resolve(
-              "label.NowYouCanSendPhotosOrVideos",
-              user.language
-            )
+            this.localizationService.resolve("label.NowYouCanSendPhotosOrVideos", user.language),
           );
           return;
         }
 
         const caption = state.data.anonymous ? "" : "@" + user.name;
-
         if (message.video) {
           const fileId = message.video.file_id;
           this.sendVideo(context, fileId, caption);
@@ -73,13 +65,17 @@ export class ShareRunner extends RunnerBaseExtended {
           const fileId = message.photo.at(-1)!.file_id;
           this.sendPhoto(context, fileId, caption);
         }
+        if (message.animation) {
+          const fileId = message.animation.file_id;
+          this.sendAnimation(context, fileId, caption);
+        }
         if (
           message.mediaGroupId !== state.data.mediaGroupId ||
           (!state.data.mediaGroupId && !message.mediaGroupId)
         ) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
-            this.localizationService.resolve("label.Sent", user.language)
+            this.localizationService.resolve("label.Sent", user.language),
           );
         }
         this.stateManager.create(context.telegramChatId, {
@@ -120,10 +116,7 @@ export class ShareRunner extends RunnerBaseExtended {
         ],
       ],
     };
-    const text = this.localizationService.resolve(
-      "label.DoYouWantToStayAnonymous",
-      user.language
-    );
+    const text = this.localizationService.resolve("label.DoYouWantToStayAnonymous", user.language);
     this.telegramChannel.sendMessage(context.telegramChatId, text, replyMarkup);
     this.stateManager.create(context.telegramChatId, {
       runner: Runner.SHARE,
@@ -139,17 +132,11 @@ export class ShareRunner extends RunnerBaseExtended {
       inline_keyboard: [
         [
           {
-            text: this.localizationService.resolve(
-              "button.Approve",
-              user.language
-            ),
+            text: this.localizationService.resolve("button.Approve", user.language),
             callback_data: `/moderation approve ${id} ${context.telegramChatId} ${caption}`,
           },
           {
-            text: this.localizationService.resolve(
-              "button.Reject",
-              user.language
-            ),
+            text: this.localizationService.resolve("button.Reject", user.language),
             callback_data: `/moderation reject ${id} ${context.telegramChatId} ${caption}`,
           },
         ],
@@ -166,17 +153,11 @@ export class ShareRunner extends RunnerBaseExtended {
       inline_keyboard: [
         [
           {
-            text: this.localizationService.resolve(
-              "button.Approve",
-              user.language
-            ),
+            text: this.localizationService.resolve("button.Approve", user.language),
             callback_data: `/moderation approve ${id} ${context.telegramChatId} ${caption}`,
           },
           {
-            text: this.localizationService.resolve(
-              "button.Reject",
-              user.language
-            ),
+            text: this.localizationService.resolve("button.Reject", user.language),
             callback_data: `/moderation reject ${id} ${context.telegramChatId} ${caption}`,
           },
         ],
@@ -184,5 +165,26 @@ export class ShareRunner extends RunnerBaseExtended {
     };
     console.log("context.username", context.username);
     this.telegramChannel.sendPhoto(ADMIN_ID, fileId, replyMarkup, caption);
+  }
+
+  async sendAnimation(context: Context, fileId: string, caption = "") {
+    const user = await this.storage.user.getByChatId(context.telegramChatId);
+    const id = await this.storage.file.upload(fileId, FileType.ANIMATION);
+    const replyMarkup = {
+      inline_keyboard: [
+        [
+          {
+            text: this.localizationService.resolve("button.Approve", user.language),
+            callback_data: `/moderation approve ${id} ${context.telegramChatId} ${caption}`,
+          },
+          {
+            text: this.localizationService.resolve("button.Reject", user.language),
+            callback_data: `/moderation reject ${id} ${context.telegramChatId} ${caption}`,
+          },
+        ],
+      ],
+    };
+    console.log("context.username", context.username);
+    this.telegramChannel.sendAnimation(ADMIN_ID, fileId, replyMarkup, caption);
   }
 }

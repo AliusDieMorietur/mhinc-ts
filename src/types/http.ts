@@ -29,7 +29,7 @@ export type HttpResult = {
 export const assertRequestOk = <T>(
   msg: string,
   res: HttpJsonResult<T>,
-  context?: Record<string, unknown>
+  context?: Record<string, unknown>,
 ): asserts res is HttpJsonResult<T> & { ok: true; json: T } => {
   if (!res.ok) {
     throw new ContextError(`Request failed ${msg}`, {
@@ -46,6 +46,6 @@ export interface HttpServiceI {
 
   requestJson<T = JSONValue>(
     url: string | URL,
-    options: HttpRequestOptions
+    options: HttpRequestOptions,
   ): Promise<HttpJsonResult<T>>;
 }

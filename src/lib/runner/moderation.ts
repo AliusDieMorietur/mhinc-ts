@@ -1,6 +1,7 @@
 import { ADMIN_ID, CHANNEL_ID } from "../../consts";
 import { Context } from "../../types/context";
 import { FileType } from "../../types/file";
+import { Language } from "../../types/i18next";
 import { Runner, RunnerMessage } from "../../types/runner";
 import { RunnerBaseExtended, RunnerBaseExtendedOptions } from "./baseExtended";
 
@@ -40,8 +41,7 @@ export class ModerationRunner extends RunnerBaseExtended {
         if (command === "approve") {
           if (file) {
             const method = typeToMethod[file.type];
-            console.log('method', method)
-            method(CHANNEL_ID, file.fileId, {}, caption);
+            method(CHANNEL_ID, file.fileId, {}, caption !== '' ?caption: this.localizationService.resolve('label."Anonymous', Language.UA) );
             this.telegramChannel.sendMessage(
               chatIdNumber,
               this.localizationService.resolve("label.YourContentWasApproved", author.language),

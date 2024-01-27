@@ -16,9 +16,9 @@ export class ModerationRunner extends RunnerBaseExtended {
       ...options,
     });
     const typeToMethod = {
-      [FileType.PHOTO]: this.telegramChannel.sendPhoto,
-      [FileType.VIDEO]: this.telegramChannel.sendVideo,
-      [FileType.ANIMATION]: this.telegramChannel.sendAnimation,
+      [FileType.PHOTO]: this.telegramChannel.sendPhoto.bind(this.telegramChannel),
+      [FileType.VIDEO]: this.telegramChannel.sendVideo.bind(this.telegramChannel),
+      [FileType.ANIMATION]: this.telegramChannel.sendAnimation.bind(this.telegramChannel),
     };
     this.init({
       onMessage: async (context: Context, message: RunnerMessage) => {},
@@ -40,6 +40,7 @@ export class ModerationRunner extends RunnerBaseExtended {
         if (command === "approve") {
           if (file) {
             const method = typeToMethod[file.type];
+            console.log('method', method)
             method(CHANNEL_ID, file.fileId, {}, caption);
             this.telegramChannel.sendMessage(
               chatIdNumber,

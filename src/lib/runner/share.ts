@@ -48,7 +48,7 @@ export class ShareRunner extends RunnerBaseExtended {
         console.log("user", user);
         console.log("message", message);
         console.log("state", state);
-        if (!message.video && message.photo.length === 0) {
+        if (!message.video && message.photo.length === 0 && !message.animation) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
             this.localizationService.resolve("label.NowYouCanSendPhotosOrVideos", user.language),
@@ -67,6 +67,7 @@ export class ShareRunner extends RunnerBaseExtended {
         }
         if (message.animation) {
           const fileId = message.animation.file_id;
+          console.log('fileId', fileId)
           this.sendAnimation(context, fileId, caption);
         }
         if (

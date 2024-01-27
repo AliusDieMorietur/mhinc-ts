@@ -41,7 +41,14 @@ export class ModerationRunner extends RunnerBaseExtended {
         if (command === "approve") {
           if (file) {
             const method = typeToMethod[file.type];
-            method(CHANNEL_ID, file.fileId, {}, caption !== '' ?caption: this.localizationService.resolve('label."Anonymous', Language.UA) );
+            method(
+              CHANNEL_ID,
+              file.fileId,
+              {},
+              caption !== ""
+                ? caption
+                : this.localizationService.resolve("label.Anonymous", Language.UA),
+            );
             this.telegramChannel.sendMessage(
               chatIdNumber,
               this.localizationService.resolve("label.YourContentWasApproved", author.language),

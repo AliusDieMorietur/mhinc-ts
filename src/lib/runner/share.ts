@@ -67,7 +67,7 @@ export class ShareRunner extends RunnerBaseExtended {
         }
         if (message.animation) {
           const fileId = message.animation.file_id;
-          console.log('fileId', fileId)
+          console.log("fileId", fileId);
           this.sendAnimation(context, fileId, caption);
         }
         if (

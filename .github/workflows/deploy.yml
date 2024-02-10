@@ -29,4 +29,6 @@ jobs:
           SCRIPT_AFTER: |
             cp /root/prod/mhinc/.env.local /root/projects/mhinc
             cd /root/projects/mhinc
+            ls -la 
+            docker-compose version
             docker-compose up -d --build

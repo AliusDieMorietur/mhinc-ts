@@ -27,11 +27,6 @@ jobs:
           REMOTE_USER: ${{ secrets.REMOTE_USER }}
           TARGET: ${{ secrets.REMOTE_TARGET }}
           SCRIPT_AFTER: |
-            export ENV=prod
-            export NVM_DIR="$HOME/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  
-            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion" 
-            cp /root/devops/mhinc/.env.prod /root/projects/mhinc
+            cp /root/prod/mhinc/.env.local /root/projects/mhinc
             cd /root/projects/mhinc
-            pm2 delete "mhinc" || true
-            pm2 start npm --name "mhinc" -- run start:prod
+            docker-compose up -d

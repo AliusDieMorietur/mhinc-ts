@@ -1,8 +1,7 @@
-import { InitError } from "../types/error";
 import { TelegramChannel } from "../lib/telegramChannel";
 import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
-import ngrok from "ngrok";
+const tunnelmole = require("tunnelmole/cjs");
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -14,8 +13,8 @@ const userPlugin = async (app: FastifyInstance): Promise<void> => {
   if (app.hasDecorator("telegramChannel")) return;
   let serverUrl = app.config.serverUrl;
   if (!serverUrl) {
-    serverUrl = await ngrok.connect({
-      addr: 3008,
+    serverUrl = await tunnelmole({
+      port: 3008,
     });
   }
   const telegramChannel = new TelegramChannel({

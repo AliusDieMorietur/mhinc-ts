@@ -1,0 +1,24 @@
+# Note that this dockerfile builds api from ROOT.
+
+FROM node:20-alpine as build
+WORKDIR /application
+COPY . .
+
+RUN npm ci
+RUN npm run build
+
+RUN rm -rf node_moduless
+
+FROM node:20-alpine
+WORKDIR /application
+RUN chown node:node /application
+USER node
+COPY --from=build --chown=node:node /application /application
+RUN npm ci --omit=dev
+
+EXPOSE 3008
+EXPOSE 4040
+
+WORKDIR /application
+
+CMD [ "node", "./dist/src/start.js" ]

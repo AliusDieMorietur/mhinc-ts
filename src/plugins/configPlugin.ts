@@ -21,8 +21,7 @@ declare module "fastify" {
 const configPlugin = async (app: FastifyInstance): Promise<void> => {
   if (app.hasDecorator("config")) return;
 
-  const env = process.env.ENV ?? ServiceEnv.LOCAL;
-  const config = await readFile(path.resolve(process.cwd(), `.env.${env}`));
+  const config = await readFile(path.resolve(process.cwd(), `.env.${ServiceEnv.LOCAL}`));
   const rawConfig = dotenv.parse(Buffer.from(config));
 
   const appConfig = {

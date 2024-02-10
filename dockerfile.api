@@ -18,7 +18,6 @@ COPY --from=build --chown=node:node /application /application
 RUN npm ci --omit=dev
 
 EXPOSE 3008
-EXPOSE 4040
 
 WORKDIR /application
 

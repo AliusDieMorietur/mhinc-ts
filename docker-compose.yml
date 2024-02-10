@@ -26,7 +26,6 @@ services:
     container_name: mhinc-api
     ports:
       - "3008:3008"
-
     depends_on:
       db:
         condition: service_healthy

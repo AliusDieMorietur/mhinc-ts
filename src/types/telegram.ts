@@ -56,7 +56,16 @@ export type InlineKeyboardButton = {
 };
 
 export type InlineMarkup = {
-  inline_keyboard?: InlineKeyboardButton[][];
+  inline_keyboard: InlineKeyboardButton[][];
+};
+
+export type ReplyKeyboardButton = {
+  text: string;
+};
+
+export type ReplyMarkup = {
+  keyboard: ReplyKeyboardButton[][];
+  one_time_keyboard?: boolean;
 };
 
 export type PhotoPayload = {

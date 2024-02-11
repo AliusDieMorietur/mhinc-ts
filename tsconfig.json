@@ -13,11 +13,11 @@
     "sourceMap": true,
     "noErrorTruncation": true,
     "skipLibCheck": true,
-    "outDir": "dist",
+    "outDir": "dist"
   },
   "include": ["./src/**/*.ts", "./src/**/*.js", "./test/**/*.ts", "./test/**/*.js"],
   "exclude": ["node_modules", ".eslintrc.js", "dist"],
   "ts-node": {
-    "experimentalResolver": true,
-  },
+    "experimentalResolver": true
+  }
 }

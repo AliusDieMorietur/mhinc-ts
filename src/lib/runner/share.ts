@@ -11,8 +11,8 @@ export enum ShareRunnerState {
 }
 
 export enum ConfidentialityReply {
-  YES = "yes",
-  NO = "no",
+  YES = "Yes",
+  NO = "No",
 }
 
 export type ShareRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name">;
@@ -27,13 +27,18 @@ export class ShareRunner extends RunnerBaseExtended {
     const states: Record<string, MessageHandler> = {
       [ShareRunnerState.CONFIDENTIALITY]: async (context, message) => {
         const user = await this.storage.user.getByChatId(context.telegramChatId);
-        const buttonOptions = Object.values(ConfidentialityReply) as string[];
-        if (buttonOptions.includes(message.text)) {
+        const buttonOptions = Object.fromEntries(
+          Object.values(ConfidentialityReply).map((reply) => [
+            this.localizationService.resolve(`button.${reply}`, user.language),
+            reply,
+          ]),
+        );
+        if (buttonOptions[message.text]) {
           this.stateManager.create(context.telegramChatId, {
             runner: Runner.SHARE,
             state: ShareRunnerState.SHARE,
             data: {
-              anonymous: message.text === ConfidentialityReply.YES,
+              anonymous: buttonOptions[message.text] === ConfidentialityReply.YES,
             },
           });
           states[ShareRunnerState.SHARE](context, message);
@@ -55,7 +60,6 @@ export class ShareRunner extends RunnerBaseExtended {
           );
           return;
         }
-
         const caption = state.data.anonymous ? "" : "@" + user.name;
         if (message.video) {
           const fileId = message.video.file_id;
@@ -104,15 +108,16 @@ export class ShareRunner extends RunnerBaseExtended {
   async askConfidentiality(context: Context) {
     const user = await this.storage.user.getByChatId(context.telegramChatId);
     const replyMarkup = {
-      inline_keyboard: [
+      one_time_keyboard: true,
+      keyboard: [
         [
           {
             text: this.localizationService.resolve("button.Yes", user.language),
-            callback_data: ConfidentialityReply.YES,
           },
+        ],
+        [
           {
             text: this.localizationService.resolve("button.No", user.language),
-            callback_data: ConfidentialityReply.NO,
           },
         ],
       ],

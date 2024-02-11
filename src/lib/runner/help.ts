@@ -12,25 +12,11 @@ export class HelpRunner extends RunnerBaseExtended {
       ...options,
     });
     this.init({
-      onMessage: async (context: Context, message: RunnerMessage) => {
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
-        const text = this.localizationService.resolve("label.Help", user.language);
-        this.telegramChannel.sendMessage(context.telegramChatId, text);
-        this.stateManager.create(context.telegramChatId, {
-          runner: Runner.HELP,
-          state: "none",
-          data: {},
-        });
-      },
+      onMessage: async (context: Context, message: RunnerMessage) => {},
       onStart: async (context: Context, args: string[]) => {
         const user = await this.storage.user.getByChatId(context.telegramChatId);
         const text = this.localizationService.resolve("label.Help", user.language);
         this.telegramChannel.sendMessage(context.telegramChatId, text);
-        this.stateManager.create(context.telegramChatId, {
-          runner: Runner.HELP,
-          state: "none",
-          data: {},
-        });
       },
     });
   }

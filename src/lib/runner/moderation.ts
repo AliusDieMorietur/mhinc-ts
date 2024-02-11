@@ -44,7 +44,7 @@ export class ModerationRunner extends RunnerBaseExtended {
             method(
               CHANNEL_ID,
               file.fileId,
-              {},
+              undefined,
               caption !== ""
                 ? caption
                 : this.localizationService.resolve("label.Anonymous", Language.UA),
@@ -60,11 +60,6 @@ export class ModerationRunner extends RunnerBaseExtended {
             this.localizationService.resolve("label.YourContentWasRejected", author.language),
           );
         }
-        this.stateManager.create(context.telegramChatId, {
-          runner: Runner.MODERATION,
-          state: "none",
-          data: {},
-        });
       },
     });
   }

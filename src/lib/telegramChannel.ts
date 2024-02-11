@@ -1,4 +1,4 @@
-import { ChatId, InlineMarkup, Photo } from "../types/telegram";
+import { ChatId, InlineMarkup, Photo, ReplyMarkup } from "../types/telegram";
 import { ServiceError } from "../types/error";
 import { HttpServiceI } from "../types/http";
 
@@ -38,18 +38,23 @@ export class TelegramChannel {
     console.log("response", response);
   }
 
-  async sendMessage(chatId: ChatId, text: string, replyMarkup: InlineMarkup = {}) {
+  async sendMessage(chatId: ChatId, text: string, replyMarkup?: InlineMarkup | ReplyMarkup) {
     const url = `${this.apiUrl}${this.token}/sendMessage`;
 
     const response = await this.http.requestJson(url, {
       method: "POST",
-      body: { text, chat_id: chatId, reply_markup: replyMarkup },
+      body: { text, chat_id: chatId, reply_markup: replyMarkup || {} },
     });
 
     console.log("response", response);
   }
 
-  async sendPhoto(chatId: ChatId, fileId: string, replyMarkup: InlineMarkup = {}, caption = "") {
+  async sendPhoto(
+    chatId: ChatId,
+    fileId: string,
+    replyMarkup?: InlineMarkup | ReplyMarkup,
+    caption = "",
+  ) {
     const url = `${this.apiUrl}${this.token}/sendPhoto`;
     const response = await this.http.requestJson(url, {
       method: "POST",
@@ -57,14 +62,19 @@ export class TelegramChannel {
         chat_id: chatId,
         photo: fileId,
         caption,
-        reply_markup: replyMarkup,
+        reply_markup: replyMarkup || {},
       },
     });
 
     console.log("response", response);
   }
 
-  async sendVideo(chatId: ChatId, fileId: string, replyMarkup: InlineMarkup = {}, caption = "") {
+  async sendVideo(
+    chatId: ChatId,
+    fileId: string,
+    replyMarkup?: InlineMarkup | ReplyMarkup,
+    caption = "",
+  ) {
     const url = `${this.apiUrl}${this.token}/sendVideo`;
     const response = await this.http.requestJson(url, {
       method: "POST",
@@ -72,7 +82,7 @@ export class TelegramChannel {
         chat_id: chatId,
         video: fileId,
         caption,
-        reply_markup: replyMarkup,
+        reply_markup: replyMarkup || {},
       },
     });
 
@@ -82,7 +92,7 @@ export class TelegramChannel {
   async sendAnimation(
     chatId: ChatId,
     fileId: string,
-    replyMarkup: InlineMarkup = {},
+    replyMarkup?: InlineMarkup | ReplyMarkup,
     caption = "",
   ) {
     const url = `${this.apiUrl}${this.token}/sendAnimation`;
@@ -92,7 +102,7 @@ export class TelegramChannel {
         chat_id: chatId,
         animation: fileId,
         caption,
-        reply_markup: replyMarkup,
+        reply_markup: replyMarkup || {},
       },
     });
 

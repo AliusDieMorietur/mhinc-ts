@@ -15,8 +15,13 @@
     "button": {
       "Approve": "Approve",
       "Reject": "Reject",
-      "Yes": "Yes",
-      "No": "No"
+      "Yes": "Yes ✅",
+      "No": "No ❌",
+      "Start": "Start 🚀",
+      "Help": "Help ❓",
+      "Share": "Share ✉️",
+      "en": "en",
+      "ua": "ua"
     }
   }
 }

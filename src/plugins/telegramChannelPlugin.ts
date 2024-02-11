@@ -16,6 +16,7 @@ const userPlugin = async (app: FastifyInstance): Promise<void> => {
     serverUrl = await tunnelmole({
       port: 3008,
     });
+    console.log("serverUrl", serverUrl);
   }
   const telegramChannel = new TelegramChannel({
     serverUrl,

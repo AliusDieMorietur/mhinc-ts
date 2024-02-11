@@ -5,6 +5,7 @@ export enum Runner {
   ECHO = "echo",
   UNHANDLED = "unhandled",
   MODERATION = "moderation",
+  MENU = "menu",
   SHARE = "share",
   HELP = "help",
 }

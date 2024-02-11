@@ -6,6 +6,7 @@ import { UnhandledRunner } from "../lib/runner/unhandled";
 import { ShareRunner } from "../lib/runner/share";
 import { ModerationRunner } from "../lib/runner/moderation";
 import { HelpRunner } from "../lib/runner/help";
+import { MenuRunner } from "../lib/runner/menu";
 
 declare module "fastify" {
   interface FastifyInstance {
@@ -16,6 +17,7 @@ declare module "fastify" {
       share: ShareRunner;
       moderation: ModerationRunner;
       help: HelpRunner;
+      menu: MenuRunner;
     };
   }
 }
@@ -36,6 +38,7 @@ const runnerPlugin = async (app: FastifyInstance): Promise<void> => {
     share: new ShareRunner(defaultRunnerOptions),
     moderation: new ModerationRunner(defaultRunnerOptions),
     help: new HelpRunner(defaultRunnerOptions),
+    menu: new MenuRunner(defaultRunnerOptions),
   };
   app.decorate("runner", runner);
 };

@@ -22,26 +22,25 @@ export class StartRunner extends RunnerBaseExtended {
     const states: Record<string, MessageHandler> = {
       [StartRunnerState.CHOOSE_LANGUAGE]: async (context, message) => {
         const user = await this.storage.user.getByChatId(context.telegramChatId);
-        const allowedLanguages = Object.values(Language) as string[];
+        const allowedLanguages = Object.fromEntries(
+          Object.values(Language).map((language) => [
+            this.localizationService.resolve(`button.${language}`, user.language),
+            language,
+          ]),
+        );
         console.log("allowedLanguages", allowedLanguages);
         console.log("message.text", message.text);
-        if (allowedLanguages.includes(message.text)) {
+        if (allowedLanguages[message.text]) {
           await this.storage.user.update(user.id, {
-            language: message.text as Language,
+            language: allowedLanguages[message.text],
           });
-          this.stateManager.create(context.telegramChatId, {
-            runner: Runner.START,
-            state: StartRunnerState.CHOOSE_LANGUAGE,
-            data: {},
-          });
-          states[StartRunnerState.GREETINGS](context, message);
+          this.activityRouter.route(context, Runner.MENU, []);
           return;
         }
         const replyMarkup = {
-          inline_keyboard: [
-            allowedLanguages.map((language) => ({
+          keyboard: [
+            Object.keys(allowedLanguages).map((language) => ({
               text: language,
-              callback_data: language,
             })),
           ],
         };
@@ -56,7 +55,26 @@ export class StartRunner extends RunnerBaseExtended {
       [StartRunnerState.GREETINGS]: async (context, message) => {
         const user = await this.storage.user.getByChatId(context.telegramChatId);
         const text = this.localizationService.resolve("label.Start", user.language);
-        this.telegramChannel.sendMessage(context.telegramChatId, text);
+        const startText = this.localizationService.resolve("button.Start", user.language);
+        const shareText = this.localizationService.resolve("button.Share", user.language);
+        const helpText = this.localizationService.resolve("button.Help", user.language);
+        const textToRunner: Record<string, Runner> = {
+          [startText]: Runner.START,
+          [shareText]: Runner.SHARE,
+          [helpText]: Runner.HELP,
+        };
+        const runner = textToRunner[message.text];
+        if (runner) {
+          this.activityRouter.route(context, runner, []);
+          return;
+        }
+        this.telegramChannel.sendMessage(context.telegramChatId, text, {
+          keyboard: [
+            [{ text: this.localizationService.resolve("button.Start", user.language) }],
+            [{ text: this.localizationService.resolve("button.Share", user.language) }],
+            [{ text: this.localizationService.resolve("button.Help", user.language) }],
+          ],
+        });
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.START,
           state: StartRunnerState.GREETINGS,
@@ -74,14 +92,15 @@ export class StartRunner extends RunnerBaseExtended {
       onStart: async (context: Context, args: string[]) => {
         const user = await this.storage.user.getByChatId(context.telegramChatId);
         const text = this.localizationService.resolve("label.ChooseLanguage", user.language);
-        const allowedLanguages = Object.values(Language);
+        const allowedLanguages = Object.values(Language).map((language) =>
+          this.localizationService.resolve(`button.${language}`, user.language),
+        );
         const replyMarkup = {
-          inline_keyboard: [
-            allowedLanguages.map((language) => ({
+          keyboard: allowedLanguages.map((language) => [
+            {
               text: language,
-              callback_data: language,
-            })),
-          ],
+            },
+          ]),
         };
         this.telegramChannel.sendMessage(context.telegramChatId, text, replyMarkup);
         this.stateManager.create(context.telegramChatId, {

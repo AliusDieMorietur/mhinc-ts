@@ -19,7 +19,6 @@ export type ShareRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name">;
 
 export class ShareRunner extends RunnerBaseExtended {
   constructor(options: ShareRunnerOptions) {
-    console.log("Share_RUNNER_CONSTRUCTOR");
     super({
       name: Runner.SHARE,
       ...options,
@@ -49,10 +48,6 @@ export class ShareRunner extends RunnerBaseExtended {
       [ShareRunnerState.SHARE]: async (context, message) => {
         const state = await this.stateManager.get(context.telegramChatId);
         const user = await this.storage.user.getByChatId(context.telegramChatId);
-        console.log("SHARE");
-        console.log("user", user);
-        console.log("message", message);
-        console.log("state", state);
         if (!message.video && message.photo.length === 0 && !message.animation) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
@@ -60,7 +55,16 @@ export class ShareRunner extends RunnerBaseExtended {
           );
           return;
         }
-        const caption = state.data.anonymous ? "" : "@" + user.name;
+        const caption = (() => {
+          let caption = "";
+          if (!state.data.anonymous) {
+            caption += "@" + user.name;
+          }
+          if (message.text) {
+            caption += message.text;
+          }
+          return caption;
+        })();
         if (message.video) {
           const fileId = message.video.file_id;
           this.sendVideo(context, fileId, caption);
@@ -71,7 +75,6 @@ export class ShareRunner extends RunnerBaseExtended {
         }
         if (message.animation) {
           const fileId = message.animation.file_id;
-          console.log("fileId", fileId);
           this.sendAnimation(context, fileId, caption);
         }
         if (
@@ -99,7 +102,7 @@ export class ShareRunner extends RunnerBaseExtended {
         const handler = states[state.state];
         if (handler) handler(context, message);
       },
-      onStart: async (context: Context, args: string[]) => {
+      onStart: async (context: Context, _: string) => {
         this.askConfidentiality(context);
       },
     });
@@ -148,7 +151,6 @@ export class ShareRunner extends RunnerBaseExtended {
         ],
       ],
     };
-    console.log("context.username", context.username);
     this.telegramChannel.sendVideo(ADMIN_ID, fileId, replyMarkup, caption);
   }
 
@@ -169,7 +171,6 @@ export class ShareRunner extends RunnerBaseExtended {
         ],
       ],
     };
-    console.log("context.username", context.username);
     this.telegramChannel.sendPhoto(ADMIN_ID, fileId, replyMarkup, caption);
   }
 
@@ -190,7 +191,6 @@ export class ShareRunner extends RunnerBaseExtended {
         ],
       ],
     };
-    console.log("context.username", context.username);
     this.telegramChannel.sendAnimation(ADMIN_ID, fileId, replyMarkup, caption);
   }
 }

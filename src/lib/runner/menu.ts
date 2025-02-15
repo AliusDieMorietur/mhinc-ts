@@ -11,7 +11,6 @@ export type MenuRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name">;
 
 export class MenuRunner extends RunnerBaseExtended {
   constructor(options: MenuRunnerOptions) {
-    console.log("Menu_RUNNER_CONSTRUCTOR");
     super({
       name: Runner.MENU,
       ...options,
@@ -35,7 +34,7 @@ export class MenuRunner extends RunnerBaseExtended {
         };
         const runner = textToRunner[message.text];
         if (runner) {
-          this.activityRouter.route(context, runner, []);
+          this.activityRouter.route(context, runner, "");
           return;
         }
         this.telegramChannel.sendMessage(context.telegramChatId, text, {
@@ -47,7 +46,7 @@ export class MenuRunner extends RunnerBaseExtended {
           data: {},
         });
       },
-      onStart: async (context: Context, args: string[]) => {
+      onStart: async (context: Context, _: string) => {
         const user = await this.storage.user.getByChatId(context.telegramChatId);
         const text = this.localizationService.resolve("label.Start", user.language);
         const startText = this.localizationService.resolve("button.Start", user.language);

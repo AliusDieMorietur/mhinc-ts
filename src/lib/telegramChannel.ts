@@ -41,12 +41,10 @@ export class TelegramChannel {
   async sendMessage(chatId: ChatId, text: string, replyMarkup?: InlineMarkup | ReplyMarkup) {
     const url = `${this.apiUrl}${this.token}/sendMessage`;
 
-    const response = await this.http.requestJson(url, {
+    await this.http.requestJson(url, {
       method: "POST",
       body: { text, chat_id: chatId, reply_markup: replyMarkup || {} },
     });
-
-    console.log("response", response);
   }
 
   async sendPhoto(
@@ -56,7 +54,7 @@ export class TelegramChannel {
     caption = "",
   ) {
     const url = `${this.apiUrl}${this.token}/sendPhoto`;
-    const response = await this.http.requestJson(url, {
+    await this.http.requestJson(url, {
       method: "POST",
       body: {
         chat_id: chatId,
@@ -65,8 +63,6 @@ export class TelegramChannel {
         reply_markup: replyMarkup || {},
       },
     });
-
-    console.log("response", response);
   }
 
   async sendVideo(
@@ -76,7 +72,7 @@ export class TelegramChannel {
     caption = "",
   ) {
     const url = `${this.apiUrl}${this.token}/sendVideo`;
-    const response = await this.http.requestJson(url, {
+    await this.http.requestJson(url, {
       method: "POST",
       body: {
         chat_id: chatId,
@@ -85,8 +81,6 @@ export class TelegramChannel {
         reply_markup: replyMarkup || {},
       },
     });
-
-    console.log("response", response);
   }
 
   async sendAnimation(
@@ -96,7 +90,7 @@ export class TelegramChannel {
     caption = "",
   ) {
     const url = `${this.apiUrl}${this.token}/sendAnimation`;
-    const response = await this.http.requestJson(url, {
+    await this.http.requestJson(url, {
       method: "POST",
       body: {
         chat_id: chatId,
@@ -105,8 +99,6 @@ export class TelegramChannel {
         reply_markup: replyMarkup || {},
       },
     });
-
-    console.log("response", response);
   }
 
   async sendMediaGroup(photos: Photo[], chatId: ChatId, caption: string) {
@@ -116,7 +108,7 @@ export class TelegramChannel {
     }));
 
     const url = `${this.apiUrl}${this.token}/sendMediaGroup`;
-    const response = await this.http.requestJson(url, {
+    await this.http.requestJson(url, {
       method: "POST",
       body: {
         chat_id: chatId,
@@ -124,19 +116,15 @@ export class TelegramChannel {
         caption,
       },
     });
-
-    console.log("response", response);
   }
 
   async answerCallback(id: string) {
     const url = `${this.apiUrl}${this.token}/answerCallbackQuery`;
-    const response = await this.http.requestJson(url, {
+    await this.http.requestJson(url, {
       method: "POST",
       body: {
         callback_query_id: id,
       },
     });
-
-    console.log("response", response);
   }
 }

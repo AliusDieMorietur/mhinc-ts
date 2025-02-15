@@ -16,11 +16,7 @@ export class ActivityRouter extends EventEmitter {
     this.stateManager = stateManager;
   }
 
-  route(context: Context, runner: Runner, args: string[]) {
-    console.log("ROUTE_RUNNER");
-    console.log("context", context);
-    console.log("runner", runner);
-    console.log("args", args);
+  route(context: Context, runner: Runner, args: string) {
     const emitted = this.emit(`runner-start-${runner}`, context, args);
     if (emitted) return;
     console.warn(`Failed to route to runner-start-${runner}`);
@@ -33,12 +29,8 @@ export class ActivityRouter extends EventEmitter {
       photo: Photo[];
     },
   ) {
-    console.log("ROUTE_MESSAGE");
-    console.log("context", context);
-    console.log("message", message);
     try {
       const state = await this.stateManager.get(context.telegramChatId);
-      console.log("state", state);
       const emitted = this.emit(`runner-message-${state.runner}`, context, message);
       if (emitted) return;
       console.warn(`Failed to route to runner-message-${state.runner}`);

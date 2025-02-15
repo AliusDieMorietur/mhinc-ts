@@ -12,12 +12,11 @@ export default async function (app: FastifyInstance): Promise<void> {
     if (telegramMessage) {
       const telegramChatId = telegramMessage.chat.id;
       const name = telegramMessage.from.username || telegramMessage.from.first_name || "";
-      const user = await app.storage.user.getByChatIdOrCreate({
+      await app.storage.user.getByChatIdOrCreate({
         name,
         language: Language.EN,
         telegramChatId,
       });
-      console.log("user", user);
     }
 
     app.messageHandler.handleMessage(update);

@@ -18,8 +18,6 @@ export class MessageHandler {
   }
 
   async handleMessage(update: Update) {
-    console.log("MESSAGE_HANDLER handleMessage");
-    console.log("update", update);
     let telegramMessage = update.message;
 
     if (!telegramMessage && update.callback_query) {
@@ -37,17 +35,13 @@ export class MessageHandler {
     const context = {
       telegramChatId,
     };
-    console.log("context", context);
 
-    const text = update.callback_query?.data || telegramMessage.text || "";
+    const text =
+      update.callback_query?.data || telegramMessage.text || telegramMessage.caption || "";
 
-    const values = text.split(" ");
-    console.log("values", values);
-    const command = values[0] || "";
+    const [command = ""] = text.split(" ");
     if (command.startsWith("/")) {
-      const args = values.slice(1);
-      console.log("command", command);
-      console.log("args", args);
+      const args = text.replace(command + " ", "").trim();
       const runnerName = command.slice(1) as Runner;
       const variants = Object.values(Runner);
       const route = variants.includes(runnerName) ? runnerName : Runner.UNHANDLED;
@@ -60,7 +54,6 @@ export class MessageHandler {
         mediaGroupId: telegramMessage.media_group_id,
         animation: telegramMessage.animation,
       };
-      console.log("message", message);
       this.activityRouter.routeMessage(context, message);
     }
   }

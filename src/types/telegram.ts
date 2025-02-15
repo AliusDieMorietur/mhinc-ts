@@ -104,6 +104,7 @@ export type Message = {
   media_group_id?: string;
   video?: Video;
   animation?: Animation;
+  caption?: string;
 };
 
 export type CallbackQuery = {

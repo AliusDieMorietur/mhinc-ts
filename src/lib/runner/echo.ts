@@ -10,7 +10,7 @@ export type EchoRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name">;
 
 export class EchoRunner extends RunnerBaseExtended {
   constructor(options: EchoRunnerOptions) {
-    console.log("Echo_RUNNER_CONSTRUCTOR");
+    ("Echo_RUNNER_CONSTRUCTOR");
     super({
       name: Runner.ECHO,
       ...options,
@@ -24,8 +24,8 @@ export class EchoRunner extends RunnerBaseExtended {
           data: {},
         });
       },
-      onStart: (context: Context, args: string[]) => {
-        this.telegramChannel.sendMessage(context.telegramChatId, "echo: " + args.join(" "));
+      onStart: (context: Context, args: string) => {
+        this.telegramChannel.sendMessage(context.telegramChatId, "echo: " + args);
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.ECHO,
           state: "none",

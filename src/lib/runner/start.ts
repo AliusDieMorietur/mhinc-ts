@@ -13,7 +13,6 @@ export type StartRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name">;
 
 export class StartRunner extends RunnerBaseExtended {
   constructor(options: StartRunnerOptions) {
-    console.log("Start_RUNNER_CONSTRUCTOR");
     super({
       name: Runner.START,
       ...options,
@@ -28,13 +27,11 @@ export class StartRunner extends RunnerBaseExtended {
             language,
           ]),
         );
-        console.log("allowedLanguages", allowedLanguages);
-        console.log("message.text", message.text);
         if (allowedLanguages[message.text]) {
           await this.storage.user.update(user.id, {
             language: allowedLanguages[message.text],
           });
-          this.activityRouter.route(context, Runner.MENU, []);
+          this.activityRouter.route(context, Runner.MENU, "");
           return;
         }
         const replyMarkup = {
@@ -65,7 +62,7 @@ export class StartRunner extends RunnerBaseExtended {
         };
         const runner = textToRunner[message.text];
         if (runner) {
-          this.activityRouter.route(context, runner, []);
+          this.activityRouter.route(context, runner, "");
           return;
         }
         this.telegramChannel.sendMessage(context.telegramChatId, text, {
@@ -89,7 +86,7 @@ export class StartRunner extends RunnerBaseExtended {
         const handler = states[state.state];
         if (handler) handler(context, message);
       },
-      onStart: async (context: Context, args: string[]) => {
+      onStart: async (context: Context, _: string) => {
         const user = await this.storage.user.getByChatId(context.telegramChatId);
         const text = this.localizationService.resolve("label.ChooseLanguage", user.language);
         const allowedLanguages = Object.values(Language).map((language) =>

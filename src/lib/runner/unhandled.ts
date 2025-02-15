@@ -6,7 +6,6 @@ export type UnhandledRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name"
 
 export class UnhandledRunner extends RunnerBaseExtended {
   constructor(options: UnhandledRunnerOptions) {
-    console.log("Unhandled_RUNNER_CONSTRUCTOR");
     super({
       name: Runner.UNHANDLED,
       ...options,
@@ -20,14 +19,14 @@ export class UnhandledRunner extends RunnerBaseExtended {
           data: {},
         });
       },
-      onStart: (context: Context, args: string[]) => {
+      onStart: (context: Context, _: string) => {
         this.telegramChannel.sendMessage(context.telegramChatId, "Unhandled");
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.UNHANDLED,
           state: "none",
           data: {},
         });
-        this.activityRouter.route(context, Runner.START, []);
+        this.activityRouter.route(context, Runner.START, "");
       },
     });
   }

@@ -11,7 +11,6 @@ export type ModerationRunnerOptions = {} & Omit<RunnerBaseExtendedOptions, "name
 
 export class ModerationRunner extends RunnerBaseExtended {
   constructor(options: ModerationRunnerOptions) {
-    console.log("Moderation_RUNNER_CONSTRUCTOR");
     super({
       name: Runner.MODERATION,
       ...options,
@@ -23,18 +22,30 @@ export class ModerationRunner extends RunnerBaseExtended {
     };
     this.init({
       onMessage: async (context: Context, message: RunnerMessage) => {},
-      onStart: async (context: Context, args: string[]) => {
+      onStart: async (context: Context, args: string) => {
         const user = await this.storage.user.getByChatId(context.telegramChatId);
         if (context.telegramChatId !== ADMIN_ID) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
             this.localizationService.resolve("label.NoPermission", user.language),
           );
-          this.activityRouter.route(context, Runner.START, []);
+          this.activityRouter.route(context, Runner.START, "");
           return;
         }
-        console.log("args", args);
-        const [command, id, chatId, caption] = args;
+        const [command, id, chatId, caption] = (() => {
+          const result = [];
+          const SEPARATOR = " ";
+          let startIndex = 0;
+          let argsQuantity = 0;
+          while (argsQuantity < 3) {
+            const nextSeparatorIndex = args.indexOf(SEPARATOR, startIndex);
+            result.push(args.slice(startIndex, nextSeparatorIndex));
+            startIndex = nextSeparatorIndex + 1;
+            argsQuantity++;
+          }
+          result.push(args.slice(startIndex));
+          return result;
+        })();
         const chatIdNumber = Number(chatId);
         const file = await this.storage.file.get(id);
         const author = await this.storage.user.getByChatId(chatIdNumber);

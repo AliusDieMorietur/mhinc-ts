@@ -13,7 +13,7 @@ export type RunnerBaseOptions = {
 };
 
 export type MessageHandler = (context: Context, message: RunnerMessage) => void;
-export type StartHandler = (context: Context, args: string[]) => void;
+export type StartHandler = (context: Context, args: string) => void;
 
 export class RunnerBase {
   public activityRouter: RunnerBaseOptions["activityRouter"];

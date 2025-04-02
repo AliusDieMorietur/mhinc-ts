@@ -48,7 +48,7 @@ export class ModerationRunner extends RunnerBaseExtended {
         })();
         const chatIdNumber = Number(chatId);
         const file = await this.storage.file.get(id);
-        const author = await this.storage.user.getByChatId(chatIdNumber);
+        const author = await this.storage.user.getByChatId(chatIdNumber).catch(() => null);
         if (command === "approve") {
           if (file) {
             const method = typeToMethod[file.type];
@@ -62,13 +62,13 @@ export class ModerationRunner extends RunnerBaseExtended {
             );
             this.telegramChannel.sendMessage(
               chatIdNumber,
-              this.localizationService.resolve("label.YourContentWasApproved", author.language),
+              this.localizationService.resolve("label.YourContentWasApproved", author?.language ?? Language.EN),
             );
           }
         } else {
           this.telegramChannel.sendMessage(
             chatIdNumber,
-            this.localizationService.resolve("label.YourContentWasRejected", author.language),
+            this.localizationService.resolve("label.YourContentWasRejected", author?.language?? Language.EN),
           );
         }
       },

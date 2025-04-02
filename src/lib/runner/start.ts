@@ -20,14 +20,14 @@ export class StartRunner extends RunnerBaseExtended {
 
     const states: Record<string, MessageHandler> = {
       [StartRunnerState.CHOOSE_LANGUAGE]: async (context, message) => {
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
+        const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null);
         const allowedLanguages = Object.fromEntries(
           Object.values(Language).map((language) => [
-            this.localizationService.resolve(`button.${language}`, user.language),
+            this.localizationService.resolve(`button.${language}`, user?.language ?? null),
             language,
           ]),
         );
-        if (allowedLanguages[message.text]) {
+        if (allowedLanguages[message.text] && user) {
           await this.storage.user.update(user.id, {
             language: allowedLanguages[message.text],
           });
@@ -41,7 +41,10 @@ export class StartRunner extends RunnerBaseExtended {
             })),
           ],
         };
-        const text = this.localizationService.resolve("label.ChooseLanguage", user.language);
+        const text = this.localizationService.resolve(
+          "label.ChooseLanguage",
+          user?.language ?? null,
+        );
         this.telegramChannel.sendMessage(context.telegramChatId, text, replyMarkup);
         this.stateManager.create(context.telegramChatId, {
           runner: Runner.START,
@@ -50,11 +53,11 @@ export class StartRunner extends RunnerBaseExtended {
         });
       },
       [StartRunnerState.GREETINGS]: async (context, message) => {
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
-        const text = this.localizationService.resolve("label.Start", user.language);
-        const startText = this.localizationService.resolve("button.Start", user.language);
-        const shareText = this.localizationService.resolve("button.Share", user.language);
-        const helpText = this.localizationService.resolve("button.Help", user.language);
+        const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null);
+        const text = this.localizationService.resolve("label.Start", user?.language ?? null);
+        const startText = this.localizationService.resolve("button.Start", user?.language ?? null);
+        const shareText = this.localizationService.resolve("button.Share", user?.language ?? null);
+        const helpText = this.localizationService.resolve("button.Help", user?.language ?? null);
         const textToRunner: Record<string, Runner> = {
           [startText]: Runner.START,
           [shareText]: Runner.SHARE,
@@ -67,9 +70,9 @@ export class StartRunner extends RunnerBaseExtended {
         }
         this.telegramChannel.sendMessage(context.telegramChatId, text, {
           keyboard: [
-            [{ text: this.localizationService.resolve("button.Start", user.language) }],
-            [{ text: this.localizationService.resolve("button.Share", user.language) }],
-            [{ text: this.localizationService.resolve("button.Help", user.language) }],
+            [{ text: this.localizationService.resolve("button.Start", user?.language ?? null) }],
+            [{ text: this.localizationService.resolve("button.Share", user?.language ?? null) }],
+            [{ text: this.localizationService.resolve("button.Help", user?.language ?? null) }],
           ],
         });
         this.stateManager.create(context.telegramChatId, {
@@ -87,10 +90,13 @@ export class StartRunner extends RunnerBaseExtended {
         if (handler) handler(context, message);
       },
       onStart: async (context: Context, _: string) => {
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
-        const text = this.localizationService.resolve("label.ChooseLanguage", user.language);
+        const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null);
+        const text = this.localizationService.resolve(
+          "label.ChooseLanguage",
+          user?.language ?? null,
+        );
         const allowedLanguages = Object.values(Language).map((language) =>
-          this.localizationService.resolve(`button.${language}`, user.language),
+          this.localizationService.resolve(`button.${language}`, user?.language ?? null),
         );
         const replyMarkup = {
           keyboard: allowedLanguages.map((language) => [

@@ -25,10 +25,10 @@ export class ShareRunner extends RunnerBaseExtended {
     });
     const states: Record<string, MessageHandler> = {
       [ShareRunnerState.CONFIDENTIALITY]: async (context, message) => {
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
+        const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null)
         const buttonOptions = Object.fromEntries(
           Object.values(ConfidentialityReply).map((reply) => [
-            this.localizationService.resolve(`button.${reply}`, user.language),
+            this.localizationService.resolve(`button.${reply}`, user?.language ?? null),
             reply,
           ]),
         );
@@ -47,18 +47,18 @@ export class ShareRunner extends RunnerBaseExtended {
       },
       [ShareRunnerState.SHARE]: async (context, message) => {
         const state = await this.stateManager.get(context.telegramChatId);
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
+        const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null)
         if (!message.video && message.photo.length === 0 && !message.animation) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
-            this.localizationService.resolve("label.NowYouCanSendPhotosOrVideos", user.language),
+            this.localizationService.resolve("label.NowYouCanSendPhotosOrVideos", user?.language ?? null)
           );
           return;
         }
         const caption = (() => {
           let caption = "";
-          if (!state.data.anonymous) {
-            caption += "@" + user.name;
+          if (!state.data.anonymous && user?.name) {
+            caption += "@" + (user.name);
           }
           if (message.text) {
             caption += message.text;
@@ -83,7 +83,7 @@ export class ShareRunner extends RunnerBaseExtended {
         ) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
-            this.localizationService.resolve("label.Sent", user.language),
+            this.localizationService.resolve("label.Sent", user?.language ?? null)
           );
         }
         this.stateManager.create(context.telegramChatId, {
@@ -109,23 +109,23 @@ export class ShareRunner extends RunnerBaseExtended {
   }
 
   async askConfidentiality(context: Context) {
-    const user = await this.storage.user.getByChatId(context.telegramChatId);
+    const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null)
     const replyMarkup = {
       one_time_keyboard: true,
       keyboard: [
         [
           {
-            text: this.localizationService.resolve("button.Yes", user.language),
+            text: this.localizationService.resolve("button.Yes", user?.language ?? null)
           },
         ],
         [
           {
-            text: this.localizationService.resolve("button.No", user.language),
+            text: this.localizationService.resolve("button.No", user?.language ?? null)
           },
         ],
       ],
     };
-    const text = this.localizationService.resolve("label.DoYouWantToStayAnonymous", user.language);
+    const text = this.localizationService.resolve("label.DoYouWantToStayAnonymous", user?.language ?? null)
     this.telegramChannel.sendMessage(context.telegramChatId, text, replyMarkup);
     this.stateManager.create(context.telegramChatId, {
       runner: Runner.SHARE,
@@ -141,11 +141,11 @@ export class ShareRunner extends RunnerBaseExtended {
       inline_keyboard: [
         [
           {
-            text: this.localizationService.resolve("button.Approve", user.language),
+            text: this.localizationService.resolve("button.Approve", user?.language ?? null),
             callback_data: `/moderation approve ${id} ${context.telegramChatId} ${caption}`,
           },
           {
-            text: this.localizationService.resolve("button.Reject", user.language),
+            text: this.localizationService.resolve("button.Reject", user?.language ?? null),
             callback_data: `/moderation reject ${id} ${context.telegramChatId} ${caption}`,
           },
         ],
@@ -155,17 +155,17 @@ export class ShareRunner extends RunnerBaseExtended {
   }
 
   async sendPhoto(context: Context, fileId: string, caption = "") {
-    const user = await this.storage.user.getByChatId(context.telegramChatId);
+    const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null)
     const id = await this.storage.file.upload(fileId, FileType.PHOTO);
     const replyMarkup = {
       inline_keyboard: [
         [
           {
-            text: this.localizationService.resolve("button.Approve", user.language),
+            text: this.localizationService.resolve("button.Approve", user?.language ?? null),
             callback_data: `/moderation approve ${id} ${context.telegramChatId} ${caption}`,
           },
           {
-            text: this.localizationService.resolve("button.Reject", user.language),
+            text: this.localizationService.resolve("button.Reject", user?.language ?? null),
             callback_data: `/moderation reject ${id} ${context.telegramChatId} ${caption}`,
           },
         ],
@@ -175,17 +175,17 @@ export class ShareRunner extends RunnerBaseExtended {
   }
 
   async sendAnimation(context: Context, fileId: string, caption = "") {
-    const user = await this.storage.user.getByChatId(context.telegramChatId);
+    const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null)
     const id = await this.storage.file.upload(fileId, FileType.ANIMATION);
     const replyMarkup = {
       inline_keyboard: [
         [
           {
-            text: this.localizationService.resolve("button.Approve", user.language),
+            text: this.localizationService.resolve("button.Approve", user?.language ?? null),
             callback_data: `/moderation approve ${id} ${context.telegramChatId} ${caption}`,
           },
           {
-            text: this.localizationService.resolve("button.Reject", user.language),
+            text: this.localizationService.resolve("button.Reject", user?.language ?? null),
             callback_data: `/moderation reject ${id} ${context.telegramChatId} ${caption}`,
           },
         ],

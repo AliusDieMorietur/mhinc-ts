@@ -23,11 +23,11 @@ export class ModerationRunner extends RunnerBaseExtended {
     this.init({
       onMessage: async (context: Context, message: RunnerMessage) => {},
       onStart: async (context: Context, args: string) => {
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
+        const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null)
         if (context.telegramChatId !== ADMIN_ID) {
           this.telegramChannel.sendMessage(
             context.telegramChatId,
-            this.localizationService.resolve("label.NoPermission", user.language),
+            this.localizationService.resolve("label.NoPermission", user?.language ?? null),
           );
           this.activityRouter.route(context, Runner.START, "");
           return;

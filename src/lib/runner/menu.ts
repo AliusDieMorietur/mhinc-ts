@@ -22,11 +22,11 @@ export class MenuRunner extends RunnerBaseExtended {
     };
     this.init({
       onMessage: async (context: Context, message: RunnerMessage) => {
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
-        const text = this.localizationService.resolve("label.Start", user.language);
-        const startText = this.localizationService.resolve("button.Start", user.language);
-        const shareText = this.localizationService.resolve("button.Share", user.language);
-        const helpText = this.localizationService.resolve("button.Help", user.language);
+        const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null)
+        const text = this.localizationService.resolve("label.Start", user?.language ?? null);
+        const startText = this.localizationService.resolve("button.Start", user?.language ?? null);
+        const shareText = this.localizationService.resolve("button.Share", user?.language ?? null);
+        const helpText = this.localizationService.resolve("button.Help", user?.language ?? null);
         const textToRunner: Record<string, Runner> = {
           [startText]: Runner.START,
           [shareText]: Runner.SHARE,
@@ -47,11 +47,11 @@ export class MenuRunner extends RunnerBaseExtended {
         });
       },
       onStart: async (context: Context, _: string) => {
-        const user = await this.storage.user.getByChatId(context.telegramChatId);
-        const text = this.localizationService.resolve("label.Start", user.language);
-        const startText = this.localizationService.resolve("button.Start", user.language);
-        const shareText = this.localizationService.resolve("button.Share", user.language);
-        const helpText = this.localizationService.resolve("button.Help", user.language);
+        const user = await this.storage.user.getByChatId(context.telegramChatId).catch(() => null)
+        const text = this.localizationService.resolve("label.Start", user?.language ?? null);
+        const startText = this.localizationService.resolve("button.Start", user?.language ?? null);
+        const shareText = this.localizationService.resolve("button.Share", user?.language ?? null);
+        const helpText = this.localizationService.resolve("button.Help", user?.language ?? null);
         this.telegramChannel.sendMessage(context.telegramChatId, text, {
           keyboard: [[{ text: startText }], [{ text: shareText }], [{ text: helpText }]],
         });
